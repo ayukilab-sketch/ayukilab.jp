@@ -1,0 +1,16 @@
+newmtl Skin
+Kd 1 0.7394291 0
+d 1
+
+newmtl Leg
+Kd 0.2924528 0.2009492 0
+d 1
+
+newmtl eye
+Kd 0 0 0
+d 1
+
+newmtl Kuchi
+Kd 1 0.6053485 0
+d 1
+
