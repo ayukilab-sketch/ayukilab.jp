@@ -1,0 +1,2387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国公立工学部 総合型選抜 進路指導ツール</title>
+<link rel="canonical" href="https://www.ayukilab.jp/kyozai/protected/k_23181.html">
+<style>
+.shinro-tool-app{
+  --bg:#f5f4f1;--surface:#fff;--border:#e0ddd8;--border-strong:#c4c0b8;
+  --text:#1a1917;--sub:#5a5855;--hint:#9a9894;
+  --accent:#1a4a8a;--accent-lt:#e6edf8;--accent-md:#2e5fa0;
+  --s-bg:#ede8fc;--s-fg:#3c3489;
+  --a-bg:#e2eef8;--a-fg:#0c447c;
+  --b-bg:#e5f2dc;--b-fg:#27500a;
+  --c-bg:#fdf0d8;--c-fg:#633806;
+  --hl:#fff3cd;--hl-border:#f0b429;
+  --good:#d4edda;--good-fg:#1a5c2a;
+  --warn:#fff3cd;--warn-fg:#7a5a00;
+  --bad:#fde8e8;--bad-fg:#8c1a1a;
+  --r:6px;--rl:10px;
+}
+.shinro-tool-app *, .shinro-tool-app *::before, .shinro-tool-app *::after{box-sizing:border-box;margin:0;padding:0;}
+.shinro-tool-app{font-family:'Hiragino Sans','Hiragino Kaku Gothic ProN','Noto Sans JP','Yu Gothic',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;}
+
+/* ヘッダー */
+.shinro-tool-app header{background:var(--accent);color:#fff;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.shinro-tool-app header h1{font-size:16px;font-weight:700;}
+.shinro-tool-app header p{font-size:11px;opacity:.7;}
+
+/* タブ */
+.shinro-tool-app .tabs{display:flex;background:var(--surface);border-bottom:2px solid var(--border);padding:0 20px;}
+.shinro-tool-app .tab{padding:12px 20px;font-size:13px;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;color:var(--sub);white-space:nowrap;}
+.shinro-tool-app .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.shinro-tool-app .tab:hover:not(.active){color:var(--text);}
+
+.shinro-tool-app .tab-content{display:none;}
+.shinro-tool-app .tab-content.active{display:flex;}
+
+/* ========== タブ1: データベース ========== */
+.shinro-tool-app #tab-db{gap:0;}
+.shinro-tool-app aside{width:230px;min-width:210px;background:var(--surface);border-right:1px solid var(--border);padding:16px 14px;height:calc(100vh - 90px);overflow-y:auto;flex-shrink:0;}
+.shinro-tool-app aside h2{font-size:10px;font-weight:700;color:var(--hint);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
+.shinro-tool-app .sb-section{margin-bottom:18px;}
+.shinro-tool-app label.fl{display:block;font-size:11px;color:var(--sub);margin-bottom:4px;font-weight:500;}
+.shinro-tool-app input[type=text], .shinro-tool-app input[type=number], .shinro-tool-app select{width:100%;padding:6px 9px;border:1px solid var(--border-strong);border-radius:var(--r);font-size:12px;background:var(--bg);color:var(--text);}
+.shinro-tool-app input[type=text]:focus, .shinro-tool-app input[type=number]:focus, .shinro-tool-app select:focus{outline:2px solid var(--accent-md);border-color:transparent;}
+.shinro-tool-app .chips{display:flex;flex-wrap:wrap;gap:4px;}
+.shinro-tool-app .chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;border:1px solid var(--border-strong);cursor:pointer;background:var(--bg);color:var(--sub);user-select:none;transition:all .12s;}
+.shinro-tool-app .chip:hover{border-color:var(--accent-md);}
+.shinro-tool-app .chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.shinro-tool-app .chip.s.active{background:var(--s-fg);border-color:var(--s-fg);}
+.shinro-tool-app .chip.a.active{background:var(--a-fg);border-color:var(--a-fg);}
+.shinro-tool-app .chip.b.active{background:var(--b-fg);border-color:var(--b-fg);}
+.shinro-tool-app .chip.c.active{background:var(--c-fg);border-color:var(--c-fg);}
+.shinro-tool-app button.reset{width:100%;padding:7px;border:1px solid var(--border-strong);border-radius:var(--r);background:var(--bg);color:var(--sub);font-size:12px;cursor:pointer;margin-top:4px;}
+.shinro-tool-app button.reset:hover{background:#eee;}
+
+.shinro-tool-app main.db-main{flex:1;padding:16px 18px 40px;min-width:0;}
+.shinro-tool-app .toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.shinro-tool-app .count{font-size:12px;color:var(--sub);}
+.shinro-tool-app .count strong{color:var(--text);}
+.shinro-tool-app .sort-row{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);}
+.shinro-tool-app .sort-row select{width:auto;padding:4px 7px;font-size:12px;}
+.shinro-tool-app .hl-note{background:var(--hl);border:1px solid var(--hl-border);border-radius:var(--r);padding:7px 12px;font-size:12px;color:#7a5a00;margin-bottom:12px;display:none;}
+.shinro-tool-app .hl-note.show{display:block;}
+.shinro-tool-app .card-list{display:flex;flex-direction:column;gap:8px;}
+.shinro-tool-app .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);}
+.shinro-tool-app .card:hover{border-color:var(--border-strong);}
+.shinro-tool-app .card.highlighted{border-color:var(--hl-border);background:var(--hl);}
+.shinro-tool-app .card-hd{display:flex;align-items:flex-start;gap:10px;padding:12px 14px 10px;cursor:pointer;justify-content:space-between;}
+.shinro-tool-app .card-hd-l{display:flex;align-items:flex-start;gap:10px;flex:1;}
+.shinro-tool-app .hbadge{display:flex;flex-direction:column;align-items:center;justify-content:center;width:50px;min-width:50px;height:50px;border-radius:var(--r);font-weight:700;}
+.shinro-tool-app .hbadge .lv{font-size:15px;}
+.shinro-tool-app .hbadge .nm{font-size:10px;opacity:.8;}
+.shinro-tool-app .lvS{background:var(--s-bg);color:var(--s-fg);}
+.shinro-tool-app .lvA{background:var(--a-bg);color:var(--a-fg);}
+.shinro-tool-app .lvB{background:var(--b-bg);color:var(--b-fg);}
+.shinro-tool-app .lvC{background:var(--c-bg);color:var(--c-fg);}
+.shinro-tool-app .ctitle h3{font-size:14px;font-weight:700;line-height:1.3;}
+.shinro-tool-app .vbadge{display:inline-block;font-size:9px;font-weight:500;padding:1px 6px;border-radius:10px;background:#fdf0d8;color:#854f0b;vertical-align:middle;}
+.shinro-tool-app .ctitle .gk{font-size:11px;color:var(--sub);margin-top:2px;}
+.shinro-tool-app .ctags{display:flex;flex-wrap:wrap;gap:3px;margin-top:5px;}
+.shinro-tool-app .ctag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;border:1px solid;}
+.shinro-tool-app .ct-s{background:#eef2fc;color:#1a4080;border-color:#c0d0f0;}
+.shinro-tool-app .ct-d{background:#f0f8f0;color:#1a5020;border-color:#b0d8b0;}
+.shinro-tool-app .ct-k{background:#fdf4f0;color:#7a3010;border-color:#e8c0a0;}
+.shinro-tool-app .toggle-ic{font-size:13px;color:var(--hint);padding-top:3px;transition:transform .2s;}
+.shinro-tool-app .card.open .toggle-ic{transform:rotate(180deg);}
+.shinro-tool-app .card-body{display:none;border-top:1px solid var(--border);padding:14px;}
+.shinro-tool-app .card.open .card-body{display:block;}
+
+/* 詳細テーブル */
+.shinro-tool-app .detail-tabs{display:flex;gap:0;margin-bottom:12px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.shinro-tool-app .dtab{padding:6px 14px;font-size:12px;cursor:pointer;background:var(--bg);color:var(--sub);border-right:1px solid var(--border);}
+.shinro-tool-app .dtab:last-child{border-right:none;}
+.shinro-tool-app .dtab.active{background:var(--accent);color:#fff;}
+.shinro-tool-app .dpanel{display:none;}
+.shinro-tool-app .dpanel.active{display:block;}
+.shinro-tool-app .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;}
+@media(max-width:700px){.shinro-tool-app .info-grid{grid-template-columns:1fr;}}
+.shinro-tool-app .info-item label{font-size:10px;font-weight:700;color:var(--hint);display:block;margin-bottom:2px;letter-spacing:.05em;}
+.shinro-tool-app .info-item p{font-size:12px;color:var(--text);line-height:1.6;}
+.shinro-tool-app .info-item.full{grid-column:1/-1;}
+.shinro-tool-app .score-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;}
+.shinro-tool-app .score-tbl th{background:var(--bg);color:var(--sub);font-weight:600;padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);}
+.shinro-tool-app .score-tbl td{padding:5px 8px;border-bottom:1px solid var(--border);vertical-align:top;}
+.shinro-tool-app .score-tbl tr:last-child td{border-bottom:none;}
+.shinro-tool-app .biko-box{background:var(--bg);border-left:3px solid var(--border-strong);padding:7px 11px;font-size:11px;color:var(--sub);margin-top:10px;border-radius:0 var(--r) var(--r) 0;}
+.shinro-tool-app .url-link{color:var(--accent-md);font-size:11px;text-decoration:none;}
+.shinro-tool-app .url-link:hover{text-decoration:underline;}
+.shinro-tool-app .empty{text-align:center;padding:50px;color:var(--hint);}
+
+/* ========== タブ2: 模試判定 ========== */
+.shinro-tool-app #tab-score{flex-direction:column;padding:20px;gap:20px;max-width:1100px;margin:0 auto;width:100%;}
+.shinro-tool-app .score-layout{display:grid;grid-template-columns:360px 1fr;gap:20px;}
+@media(max-width:900px){.shinro-tool-app .score-layout{grid-template-columns:1fr;}}
+.shinro-tool-app .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;}
+.shinro-tool-app .panel h2{font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text);border-bottom:1px solid var(--border);padding-bottom:8px;}
+.shinro-tool-app .period-tabs{display:flex;gap:6px;margin-bottom:16px;}
+.shinro-tool-app .ptab{padding:5px 10px;font-size:11px;cursor:pointer;border:1px solid var(--border-strong);border-radius:20px;background:var(--bg);color:var(--sub);white-space:nowrap;}
+.shinro-tool-app .ptab.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.shinro-tool-app .score-form table{width:100%;border-collapse:collapse;font-size:13px;}
+.shinro-tool-app .score-form td{padding:5px 6px;}
+.shinro-tool-app .score-form td:first-child{color:var(--sub);font-size:12px;width:150px;}
+.shinro-tool-app .score-form input{width:80px;padding:5px 8px;text-align:right;font-size:13px;border:1px solid var(--border-strong);border-radius:var(--r);background:var(--bg);color:var(--text);}
+.shinro-tool-app .score-form input:focus{outline:2px solid var(--accent-md);border-color:transparent;}
+.shinro-tool-app .score-form td:last-child{font-size:11px;color:var(--hint);}
+.shinro-tool-app .total-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:2px solid var(--border);font-weight:700;}
+.shinro-tool-app .total-row .nums{font-size:20px;color:var(--accent);}
+.shinro-tool-app .total-row .sub-nums{font-size:12px;color:var(--sub);text-align:right;}
+.shinro-tool-app .calc-btn{width:100%;margin-top:12px;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;}
+.shinro-tool-app .calc-btn:hover{background:var(--accent-md);}
+.shinro-tool-app .trend-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.shinro-tool-app .trend-card{flex:1;min-width:72px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:6px 8px;text-align:center;}
+.shinro-tool-app .trend-card .tc-label{font-size:10px;color:var(--hint);}
+.shinro-tool-app .trend-card .tc-val{font-size:16px;font-weight:700;color:var(--accent);margin-top:2px;}
+.shinro-tool-app .trend-card .tc-pct{font-size:10px;color:var(--sub);}
+
+/* 判定結果 */
+.shinro-tool-app .result-list{display:flex;flex-direction:column;gap:8px;max-height:600px;overflow-y:auto;}
+.shinro-tool-app .result-card{border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.shinro-tool-app .result-hd{display:flex;align-items:center;gap:10px;padding:10px 12px;}
+.shinro-tool-app .result-hd .hbadge{width:44px;min-width:44px;height:44px;}
+.shinro-tool-app .result-info{flex:1;}
+.shinro-tool-app .result-info h3{font-size:13px;font-weight:700;}
+.shinro-tool-app .result-info .gk{font-size:11px;color:var(--sub);}
+.shinro-tool-app .judge{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.shinro-tool-app .judge-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.shinro-tool-app .j-A{background:var(--good);color:var(--good-fg);}
+.shinro-tool-app .j-B{background:#d4f0d4;color:#1a5020;}
+.shinro-tool-app .j-C{background:var(--warn);color:var(--warn-fg);}
+.shinro-tool-app .j-D{background:#fde8c8;color:#7a4000;}
+.shinro-tool-app .j-E{background:var(--bad);color:var(--bad-fg);}
+.shinro-tool-app .judge .pts{font-size:10px;color:var(--sub);}
+.shinro-tool-app .result-detail{border-top:1px solid var(--border);padding:8px 12px;background:var(--bg);font-size:11px;color:var(--sub);display:none;}
+.shinro-tool-app .result-card.open .result-detail{display:block;}
+.shinro-tool-app .score-bars{display:flex;flex-direction:column;gap:4px;margin-top:6px;}
+.shinro-tool-app .bar-row{display:flex;align-items:center;gap:6px;}
+.shinro-tool-app .bar-label{width:100px;font-size:10px;color:var(--hint);text-align:right;}
+.shinro-tool-app .bar-track{flex:1;background:var(--border);border-radius:3px;height:6px;overflow:hidden;}
+.shinro-tool-app .bar-fill{height:100%;border-radius:3px;background:var(--accent-md);transition:width .4s;}
+.shinro-tool-app .bar-val{width:40px;font-size:10px;text-align:right;}
+.shinro-tool-app .no-score{text-align:center;padding:40px;color:var(--hint);font-size:13px;}
+.shinro-tool-app .legend{display:flex;gap:8px;flex-wrap:wrap;font-size:11px;margin-bottom:10px;}
+.shinro-tool-app .legend span{display:flex;align-items:center;gap:4px;}
+.shinro-tool-app .leg-dot{width:10px;height:10px;border-radius:50%;}
+
+/* 印刷 */
+@media print{
+  .shinro-tool-app .tabs, .shinro-tool-app .tab, .shinro-tool-app aside, .shinro-tool-app .sort-row, .shinro-tool-app .period-tabs, .shinro-tool-app .calc-btn{display:none!important;}
+  .shinro-tool-app .card-body{display:block!important;}
+  .shinro-tool-app .card{break-inside:avoid;margin-bottom:6px;}
+  .shinro-tool-app #tab-db{display:flex!important;}
+  .shinro-tool-app #tab-score{display:none!important;}
+}
+</style>
+</head>
+<body class="shinro-tool-app">
+<header>
+  <div><h1>国公立大学 工学部系 総合型選抜 進路指導ツール</h1></div>
+  <p>高等学校教員向け ／ 対象：理系3年生　／　総合型43大学・学校推薦型44大学収録　※2027年度入試参考情報　実際の出願は各大学募集要項で必ず確認</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('db',this)">総合型選抜データベース</div>
+  <div class="tab" onclick="switchTab('suisen',this)">学校推薦型選抜データベース</div>
+  <div class="tab" onclick="switchTab('score',this)">模試得点入力・判定</div>
+</div>
+
+<!-- ===== タブ1: データベース ===== -->
+<div class="tab-content active" id="tab-db">
+  <aside>
+    <div class="sb-section">
+      <h2>キーワード検索</h2>
+      <input type="text" id="search" placeholder="大学名・学科・選考名など">
+    </div>
+    <div class="sb-section">
+      <h2>偏差値帯</h2>
+      <div class="chips" id="lv-chips">
+        <span class="chip active" data-lv="all">すべて</span>
+        <span class="chip s" data-lv="S">S 65+</span>
+        <span class="chip a" data-lv="A">A 60-64</span>
+        <span class="chip b" data-lv="B">B 55-59</span>
+        <span class="chip c" data-lv="C">C 50-54</span>
+      </div>
+    </div>
+    <div class="sb-section">
+      <h2>共通テスト</h2>
+      <div class="chips" id="kt-chips">
+        <span class="chip active" data-kt="all">すべて</span>
+        <span class="chip" data-kt="要">必須</span>
+        <span class="chip" data-kt="基準点">基準点あり</span>
+        <span class="chip" data-kt="不要">不要</span>
+      </div>
+    </div>
+    <div class="sb-section">
+      <h2>地域</h2>
+      <select id="area">
+        <option value="all">すべて</option>
+        <option value="北海道">北海道</option>
+        <option value="東北">東北</option>
+        <option value="関東">関東</option>
+        <option value="中部">中部</option>
+        <option value="近畿">近畿</option>
+        <option value="中国・四国">中国・四国</option>
+        <option value="九州">九州</option>
+      </select>
+    </div>
+    <div class="sb-section">
+      <h2>データ精度</h2>
+      <div class="chips" id="vf-chips">
+        <span class="chip active" data-vf="all">すべて</span>
+        <span class="chip" data-vf="verified">詳細確認済み</span>
+        <span class="chip" data-vf="unverified">概要のみ</span>
+      </div>
+    </div>
+    <div class="sb-section">
+      <h2>マーク得点でハイライト</h2>
+      <label class="fl">模試得点（1000点満点・素点）</label>
+      <input type="number" id="hl-score" placeholder="例：720" min="0" max="1000" step="1">
+      <p style="font-size:10px;color:var(--hint);margin-top:4px;">入力すると対応レベル帯をオレンジ強調</p>
+    </div>
+    <button class="reset" onclick="resetDB()">↺ フィルタをリセット</button>
+  </aside>
+
+  <main class="db-main">
+    <div class="toolbar">
+      <div class="count">該当 <strong id="db-count">0</strong> 件</div>
+      <div class="sort-row">並び替え：
+        <select id="db-sort">
+          <option value="hd">偏差値（高い順）</option>
+          <option value="ha">偏差値（低い順）</option>
+          <option value="sa">出願時期順</option>
+          <option value="na">大学名順</option>
+        </select>
+      </div>
+    </div>
+    <div class="hl-note" id="hl-note"></div>
+    <div class="card-list" id="card-list"></div>
+    <div class="empty" id="db-empty" style="display:none;">条件に合う大学が見つかりませんでした。</div>
+  </main>
+</div>
+
+<!-- ===== タブ2: 学校推薦型選抜データベース ===== -->
+<div class="tab-content" id="tab-suisen">
+  <aside>
+    <div class="sb-section">
+      <h2>キーワード検索</h2>
+      <input type="text" id="s-search" placeholder="大学名・学科・コースなど">
+    </div>
+    <div class="sb-section">
+      <h2>専願・併願</h2>
+      <div class="chips" id="s-sengan-chips">
+        <span class="chip active" data-sengan="all">すべて</span>
+        <span class="chip" data-sengan="専願">専願のみ</span>
+        <span class="chip" data-sengan="併願可">併願可あり</span>
+      </div>
+    </div>
+    <div class="sb-section">
+      <h2>共通テスト</h2>
+      <div class="chips" id="s-kt-chips">
+        <span class="chip active" data-kt="all">すべて</span>
+        <span class="chip" data-kt="要">必須</span>
+        <span class="chip" data-kt="不要">不要</span>
+        <span class="chip" data-kt="場合により">学科による</span>
+      </div>
+    </div>
+    <div class="sb-section">
+      <h2>選考方法</h2>
+      <div class="chips" id="s-method-chips">
+        <span class="chip active" data-method="all">すべて</span>
+        <span class="chip" data-method="gakuriki">学力試験あり</span>
+        <span class="chip" data-method="ronbun">小論文あり</span>
+        <span class="chip" data-method="jitsugi">実技あり</span>
+      </div>
+    </div>
+    <div class="sb-section">
+      <h2>地域</h2>
+      <select id="s-area">
+        <option value="all">すべて</option>
+        <option value="北海道">北海道</option>
+        <option value="東北">東北</option>
+        <option value="関東">関東</option>
+        <option value="中部">中部</option>
+        <option value="近畿">近畿</option>
+        <option value="中国・四国">中国・四国</option>
+        <option value="九州">九州</option>
+      </select>
+    </div>
+    <div class="sb-section">
+      <h2>データ精度</h2>
+      <div class="chips" id="s-vf-chips">
+        <span class="chip active" data-vf="all">すべて</span>
+        <span class="chip" data-vf="verified">詳細確認済み</span>
+        <span class="chip" data-vf="unverified">概要のみ</span>
+      </div>
+    </div>
+    <button class="reset" onclick="resetSuisen()">↺ フィルタをリセット</button>
+  </aside>
+
+  <main class="db-main">
+    <div class="toolbar">
+      <div class="count">該当 <strong id="s-count">0</strong> 件（大学数）／ <strong id="s-senko-count">0</strong> 件（選抜区分数）</div>
+    </div>
+    <div class="card-list" id="s-card-list"></div>
+    <div class="empty" id="s-empty" style="display:none;">条件に合う選抜が見つかりませんでした。</div>
+  </main>
+</div>
+
+<!-- ===== タブ3: 模試判定 ===== -->
+<div class="tab-content" id="tab-score">
+  <div class="score-layout" style="width:100%;">
+
+    <!-- 左：得点入力 -->
+    <div>
+      <div class="panel">
+        <h2>共通テスト得点入力</h2>
+        <div class="period-tabs" id="period-tabs" style="flex-wrap:wrap;">
+          <div class="ptab active" onclick="switchPeriod(0,this)">4月 河合ソラ第1回マーク</div>
+          <div class="ptab" onclick="switchPeriod(1,this)">6月 進研マーク</div>
+          <div class="ptab" onclick="switchPeriod(2,this)">7月 河合第2回マーク</div>
+          <div class="ptab" onclick="switchPeriod(3,this)">9月 駿台マーク</div>
+          <div class="ptab" onclick="switchPeriod(4,this)">10月 進研マーク</div>
+          <div class="ptab" onclick="switchPeriod(5,this)">11月 全統共通テスト対策</div>
+          <div class="ptab" onclick="switchPeriod(6,this)">1月 Kパック</div>
+        </div>
+        <div class="score-form">
+          <table>
+            <tr><td>国語</td><td><input type="number" id="s0" min="0" max="200" placeholder="0"> / 200</td><td></td></tr>
+            <tr><td>数学IA</td><td><input type="number" id="s1" min="0" max="100" placeholder="0"> / 100</td><td></td></tr>
+            <tr><td>数学IIB・C</td><td><input type="number" id="s2" min="0" max="100" placeholder="0"> / 100</td><td></td></tr>
+            <tr><td>物理</td><td><input type="number" id="s3" min="0" max="100" placeholder="0"> / 100</td><td></td></tr>
+            <tr><td>化学</td><td><input type="number" id="s4" min="0" max="100" placeholder="0"> / 100</td><td></td></tr>
+            <tr><td>地歴・公民</td><td><input type="number" id="s5" min="0" max="100" placeholder="0"> / 100</td><td></td></tr>
+            <tr><td>英語（R）</td><td><input type="number" id="s6r" min="0" max="100" placeholder="0"> / 100</td><td>リーディング</td></tr>
+            <tr><td>英語（L）</td><td><input type="number" id="s6l" min="0" max="100" placeholder="0"> / 100</td><td>リスニング</td></tr>
+            <tr><td>情報I</td><td><input type="number" id="s7" min="0" max="100" placeholder="0"> / 100</td><td></td></tr>
+          </table>
+        </div>
+        <div class="total-row">
+          <div>
+            <div style="font-size:11px;color:var(--sub);">素点合計（1000点満点）</div>
+            <div class="nums" id="total-raw">0 点</div>
+          </div>
+          <div class="sub-nums">
+            <div>英語圧縮後（900点換算）: <strong id="total-900">0</strong> 点</div>
+            <div>得点率: <strong id="total-pct">0.0</strong>%</div>
+          </div>
+        </div>
+        <button class="calc-btn" onclick="calcJudge()">判定を計算する</button>
+      </div>
+
+      <div class="panel" style="margin-top:14px;">
+        <h2>時期別推移（7時点・グラフ概観）</h2>
+        <div id="trend-chart-wrap" style="margin-bottom:14px;"></div>
+        <div class="trend-row" id="trend-row" style="flex-wrap:wrap;">
+          <div class="trend-card"><div class="tc-label">4月</div><div class="tc-val" id="tr0">−</div><div class="tc-pct" id="tr0p"></div></div>
+          <div class="trend-card"><div class="tc-label">6月</div><div class="tc-val" id="tr1">−</div><div class="tc-pct" id="tr1p"></div></div>
+          <div class="trend-card"><div class="tc-label">7月</div><div class="tc-val" id="tr2">−</div><div class="tc-pct" id="tr2p"></div></div>
+          <div class="trend-card"><div class="tc-label">9月</div><div class="tc-val" id="tr3">−</div><div class="tc-pct" id="tr3p"></div></div>
+          <div class="trend-card"><div class="tc-label">10月</div><div class="tc-val" id="tr4">−</div><div class="tc-pct" id="tr4p"></div></div>
+          <div class="trend-card"><div class="tc-label">11月</div><div class="tc-val" id="tr5">−</div><div class="tc-pct" id="tr5p"></div></div>
+          <div class="trend-card"><div class="tc-label">1月</div><div class="tc-val" id="tr6">−</div><div class="tc-pct" id="tr6p"></div></div>
+        </div>
+        <p style="font-size:11px;color:var(--hint);margin-top:8px;">※各時期のタブに切り替えて得点を入力し「判定を計算」すると記録されます。すべて1000点満点で統一して入力してください。</p>
+      </div>
+    </div>
+
+    <!-- 右：判定結果 -->
+    <div class="panel">
+      <h2>大学別 換算得点・判定<span id="result-period-label" style="font-size:12px;color:var(--sub);font-weight:400;margin-left:8px;"></span></h2>
+      <div class="legend">
+        <span><span class="leg-dot" style="background:#2a8a3a;"></span>A判定（圏内）</span>
+        <span><span class="leg-dot" style="background:#5ab85a;"></span>B判定（圏内に近い）</span>
+        <span><span class="leg-dot" style="background:#d4a017;"></span>C判定（努力圏）</span>
+        <span><span class="leg-dot" style="background:#d47017;"></span>D判定（要注意）</span>
+        <span><span class="leg-dot" style="background:#c04040;"></span>E判定（圏外）</span>
+      </div>
+      <div id="result-area"><div class="no-score">左の「判定を計算する」ボタンを押してください</div></div>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--surface);border-top:1px solid var(--border);padding:14px 20px;font-size:11px;color:var(--hint);">
+  <p><strong>【総合型選抜タブ】</strong>収録43大学（2026年6月時点で確認できた工学系総合型選抜実施国公立大学）。「概要のみ」バッジの大学は、実施有無は確認済みだが学科別の詳細配点までは未確認。「詳細確認済み」は出願条件・選考内容・配点構造まで公式情報で確認したもの。長岡技術科学大学を追加調査中。</p>
+  <p style="margin-top:6px;"><strong>【学校推薦型選抜タブ】</strong>収録44大学・298選抜区分。理工学部全体（理学部含む）を対象に、学科・コース・枠単位まで詳細掲載。すべて駿台の学校推薦型選抜情報をもとに専願/併願・配点・面接内容まで確認済み。九州大学・神戸大学・千葉大学・島根大学・広島大学は工学部本体では学校推薦型選抜を実施していない（別学部のみで実施。詳細はカード内に記載）ことが判明している。山口大学工学部・徳島大学理工学部等、2026年度に学部改組を予定している大学は、コース名称が変更される可能性がある。</p>
+  <p style="margin-top:6px;">本データは駿台・河合塾Kei-Net・各大学公式サイト等の公開情報をもとに作成。配点・条件は大学の組織改編により変更される場合があるため、出願前に必ず最新の学生募集要項を確認すること。</p>
+</footer>
+
+<script>
+// ============================================================
+// データ定義
+// 配点オブジェクト凡例:
+//   kokugo, math1a, math2bc, phys, chem, rekiko, eigo(R+L圧縮後), jyouhou
+//   → 各大学の換算で使用する係数（元科目の得点に掛ける）
+//   total_max : 換算後の満点
+//   note : 配点備考
+// ============================================================
+const DATA = [
+{
+  univ:'大阪大学', verified:true, area:'近畿', gakubu:'工学部（各学科）',
+  hensachi:67, level:'S',
+  senko:[
+    { name:'総合型選抜（一般枠）', kyotsuu:'要（6教科8科目）', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月〜12月',
+      shikaku:'学科ごとに異なる。卓越した学業成績・特定資格・活動実績等',
+      naiyou:'書類審査（志望理由書・調査書・推薦書）＋面接・筆記（学科による）',
+      haiten:[
+        {label:'共通テスト（6科目換算）', points:900, note:'英語は R+L を 100点に圧縮。詳細は学科ごとに傾斜あり'},
+        {label:'面接・口頭試問', points:200, note:'学科による'},
+        {label:'書類評価', points:100, note:'活動実績・志望理由書'},
+      ],
+      total_max:1200,
+      biko:'全学科での実施ではなく特定学科のみ。必ず大学HP・各学科の募集要項を確認',
+    }
+  ],
+  url:'https://www.osaka-u.ac.jp/ja/admissions/faculty',
+  kt_scale:{kokugo:1,math1a:2,math2bc:2,phys:2,chem:2,rekiko:1,eigo:1,jyouhou:0,max:1100},
+},
+{
+  univ:'東京科学大学', verified:true, area:'関東', gakubu:'工学院・情報理工学院・環境社会理工学院',
+  hensachi:70, level:'S',
+  senko:[
+    { name:'総合型選抜（一般枠）', kyotsuu:'要（6教科8科目）', kyotsuu_type:'要',
+      shutsugan:'9月中旬〜下旬', nicchi:'11月（1次）→12月（2次）',
+      shikaku:'活動実績報告書の提出が必要。各学院・系ごとに求める学生像あり',
+      naiyou:'1次：書類審査（活動実績報告書・志望理由書）→ 2次：面接（口頭試問：数学・物理含む）',
+      haiten:[
+        {label:'共通テスト（6教科8科目）', points:900, note:'英語は R+L の合計を 1/2 圧縮。理科・数学重視'},
+        {label:'口頭試問（数学・物理）', points:300, note:'2次選考'},
+        {label:'書類・活動実績', points:200, note:'活動実績報告書を重視'},
+      ],
+      total_max:1400,
+      biko:'専攻は2年次から。女子枠は志願者が1.5倍超で共通テスト成績による1次選抜あり',
+    },
+    { name:'総合型選抜（女子枠）', kyotsuu:'要（6教科8科目）', kyotsuu_type:'要',
+      shutsugan:'9月中旬〜下旬', nicchi:'11月（1次）→12月（2次）',
+      shikaku:'戸籍上の女子に限る。各学院・系ごとに条件あり',
+      naiyou:'書類審査＋面接（口頭試問：数学・物理含む）',
+      haiten:[
+        {label:'共通テスト（6教科8科目）', points:900, note:'英語圧縮後 900点満点'},
+        {label:'口頭試問', points:300, note:'数Ⅲ範囲含む'},
+        {label:'書類評価', points:200, note:'活動実績報告書'},
+      ],
+      total_max:1400,
+      biko:'志願者が女子枠募集人員の約1.5倍を超えた場合、共通テスト成績で第1次選抜を行う',
+    }
+  ],
+  url:'https://admissions.isct.ac.jp/ja/013/undergraduate/entrance-examination/comprehensive',
+  kt_scale:{kokugo:1,math1a:2,math2bc:2,phys:2,chem:1,rekiko:0.5,eigo:1,jyouhou:0.5,max:1000},
+},
+{
+  univ:'東北大学', verified:true, area:'東北', gakubu:'工学部（機械航空・材料・電気情報・建築都市 等）',
+  hensachi:65, level:'S',
+  senko:[
+    { name:'AO入試II期', kyotsuu:'要（基準点 520/900点）', kyotsuu_type:'基準点',
+      shutsugan:'9月上旬〜中旬', nicchi:'10月（2次試験）→11月初旬（合格発表）',
+      shikaku:'調査書・個人評価書（教員作成必須）・自己推薦書・活動記録等。専攻ごとに求める学生像あり',
+      naiyou:'1次：書類選考 → 2次：筆記（数学・理科）＋面接・口頭試問',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'合格基準点 520点以上。英語は R+L を 1/2 圧縮'},
+        {label:'筆記試験（数学）', points:200, note:'2次選考'},
+        {label:'筆記試験（理科：物理 or 化学）', points:200, note:'2次選考'},
+        {label:'面接・口頭試問', points:200, note:'専攻ごとに内容異なる'},
+        {label:'書類評価', points:100, note:'自己推薦書・活動記録'},
+      ],
+      total_max:1600,
+      biko:'共通テスト基準点（520点）を下回ると書類・面接の評価に関わらず不合格。個人評価書は高校教員が作成',
+    }
+  ],
+  url:'https://www.eng.tohoku.ac.jp/admission/ugrad/exam.html',
+  kt_scale:{kokugo:1,math1a:1,math2bc:1,phys:1,chem:1,rekiko:0.5,eigo:1,jyouhou:0.5,max:900},
+},
+{
+  univ:'九州大学', verified:true, area:'九州', gakubu:'工学部（各学科）',
+  hensachi:62, level:'S',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'要', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月前後',
+      shikaku:'学科ごとに異なる。海外経験・資格・活動歴等を考慮する場合あり',
+      naiyou:'書類審査＋面接・小論文（学科による）',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後。理系科目に傾斜をかける学科あり'},
+        {label:'面接・小論文', points:300, note:'学科による'},
+        {label:'書類評価', points:100, note:'志望理由書・調査書'},
+      ],
+      total_max:1300,
+      biko:'一部学科のみ実施。募集人員は少数（学科あたり2〜5名程度）。実施学科は年度により変動あり',
+    }
+  ],
+  url:'https://www.kyushu-u.ac.jp/ja/admission/faculty/',
+  kt_scale:{kokugo:1,math1a:2,math2bc:2,phys:2,chem:2,rekiko:0.5,eigo:1,jyouhou:0,max:1050},
+},
+{
+  univ:'名古屋大学', verified:true, area:'中部', gakubu:'工学部（各学科）',
+  hensachi:63, level:'S',
+  senko:[
+    { name:'総合型選抜（共通テスト課す型）', kyotsuu:'要（共通テスト後判定）', kyotsuu_type:'要',
+      shutsugan:'10月前後', nicchi:'共通テスト後・2月前後合格発表',
+      shikaku:'工学部では共通テストを課す方式が中心。学科ごとに詳細条件あり',
+      naiyou:'書類審査（志望理由書・推薦書・調査書）＋面接・口頭試問（一部学科）',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後 900点満点。数学・理科重視傾斜あり'},
+        {label:'面接・口頭試問', points:200, note:'学科による'},
+        {label:'書類評価', points:100, note:''},
+      ],
+      total_max:1200,
+      biko:'工学部での総合型選抜は一部学科のみ。共通テスト後に合否が決まるため実質的に専願',
+    }
+  ],
+  url:'https://www.nagoya-u.ac.jp/admissions/exam/',
+  kt_scale:{kokugo:1,math1a:2,math2bc:2,phys:2,chem:2,rekiko:0.5,eigo:1,jyouhou:0,max:1050},
+},
+{
+  univ:'筑波大学', verified:true, area:'関東', gakubu:'理工学群（工学システム・社会工学 等）',
+  hensachi:62, level:'S',
+  senko:[
+    { name:'AC入試（総合型選抜）', kyotsuu:'要（6教科8科目）', kyotsuu_type:'要',
+      shutsugan:'9月上旬', nicchi:'10〜11月（学群により異なる）',
+      shikaku:'学ぶ意欲・創造性等を重視。学群により課題提出や資格要件あり',
+      naiyou:'書類（志望理由書・自己アピール・推薦書等）＋筆記試験または面接',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後'},
+        {label:'小論文・筆記', points:200, note:'学群による'},
+        {label:'面接', points:200, note:'学群による'},
+        {label:'書類評価', points:100, note:'自己アピール・推薦書'},
+      ],
+      total_max:1400,
+      biko:'専攻ごとに選考内容が大きく異なる。各学群のアドミッションポリシーを個別確認すること',
+    }
+  ],
+  url:'https://www.tsukuba.ac.jp/admission/undergraduate-admission/ac/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1.5,rekiko:0.5,eigo:1,jyouhou:0.5,max:950},
+},
+{
+  univ:'北海道大学', verified:true, area:'北海道', gakubu:'工学部（応用理工系・機械知能・環境社会 等）',
+  hensachi:60, level:'A',
+  senko:[
+    { name:'フロンティア入試TypeⅠ', kyotsuu:'要（基準点 520/900点）', kyotsuu_type:'基準点',
+      shutsugan:'9月上旬', nicchi:'10〜11月（2次選考）',
+      shikaku:'英語資格（英検2級・TOEIC600点等）または競技実績要件あり。個人評価書（教員作成）必須',
+      naiyou:'1次：書類（調査書・個人評価書・自己推薦書・学業資料・課題論文）→ 2次：面接（口頭試問含む）',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'合格基準点 520点以上。英語圧縮後'},
+        {label:'課題論文', points:200, note:'1次書類として提出'},
+        {label:'面接・口頭試問', points:300, note:'2次選考'},
+        {label:'個人評価書・自己推薦書', points:100, note:'教員が作成する個人評価書を含む'},
+      ],
+      total_max:1500,
+      biko:'英語資格（英検2級以上など）が出願要件。共通テスト基準点未達は不合格。募集人員は3〜4名と少数',
+    },
+    { name:'フロンティア入試TypeⅡ', kyotsuu:'要（基準点 520/900点）', kyotsuu_type:'基準点',
+      shutsugan:'9月中旬', nicchi:'10〜11月（2次選考）',
+      shikaku:'英語資格（CEFR B1以上）が多い。個人評価書（教員作成）必須',
+      naiyou:'1次：書類選考 → 2次：適性試験（数学・理科）＋面接',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'合格基準点 520点以上'},
+        {label:'適性試験（数学・理科）', points:300, note:'2次選考'},
+        {label:'面接', points:200, note:''},
+        {label:'書類評価', points:100, note:'課題論文・学業資料'},
+      ],
+      total_max:1500,
+      biko:'TypeⅠと比べ英語資格の基準が高め（CEFR B1≒英検2級〜準1級相当）。募集人員は約15名',
+    }
+  ],
+  url:'https://www.hokudai.ac.jp/admission/faculty/ao/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'神戸大学', verified:true, area:'近畿', gakubu:'工学部（建築・市民・電気電子・機械・応化 等）',
+  hensachi:60, level:'A',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'要（6教科8科目）', kyotsuu_type:'要',
+      shutsugan:'10月前後', nicchi:'共通テスト後〜2月',
+      shikaku:'各学科が求める学生像に合致すること。推薦書・調査書必須',
+      naiyou:'書類審査＋面接（学力試問含む場合あり）',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後。学科により傾斜配点あり'},
+        {label:'面接・学力試問', points:200, note:''},
+        {label:'書類評価', points:100, note:'推薦書・志望理由書'},
+      ],
+      total_max:1200,
+      biko:'共通テスト後（2月前後）に最終合格発表。合格すれば専願となる。工学部全学科での実施ではない',
+    }
+  ],
+  url:'https://www.kobe-u.ac.jp/ja/admissions/undergraduate/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1.5,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'千葉大学', verified:true, area:'関東', gakubu:'工学部 総合工学科（機械・電気・建築・情報 等 全コース）',
+  hensachi:58, level:'B',
+  senko:[
+    { name:'総合型選抜（工学部）', kyotsuu:'要', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月〜12月',
+      shikaku:'現役・既卒とも可。地域選抜枠は現役かつ千葉県内在学等の条件あり',
+      naiyou:'書類（志望理由書・調査書）＋面接・口頭試問',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後。コースにより教科数が異なる'},
+        {label:'面接・口頭試問', points:200, note:''},
+        {label:'書類評価', points:100, note:'志望理由書'},
+      ],
+      total_max:1200,
+      biko:'情報工学コースは情報・データサイエンス学部との連携あり。コースごとに詳細を要確認',
+    }
+  ],
+  url:'https://www.chiba-u.ac.jp/admissions/gakubu/information.html',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0.5,max:950},
+},
+{
+  univ:'横浜国立大学', verified:true, area:'関東', gakubu:'理工学部（機械・電子・化学・物理 等）／都市科学部',
+  hensachi:58, level:'B',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'要（6教科8科目）', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月〜12月',
+      shikaku:'学部・学科ごとの出願条件あり。研究・課外活動実績を重視する場合あり',
+      naiyou:'書類審査（自己アピール・推薦書・調査書）＋面接',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後'},
+        {label:'面接', points:200, note:''},
+        {label:'書類評価', points:100, note:'自己アピール・推薦書'},
+      ],
+      total_max:1200,
+      biko:'一部学科のみ実施の場合あり。最新の募集要項で実施学科を確認すること',
+    }
+  ],
+  url:'https://www.ynu.ac.jp/admission/faculty/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0.5,max:950},
+},
+{
+  univ:'電気通信大学', verified:true, area:'関東', gakubu:'情報理工学域（Ⅰ類情報系・Ⅱ類融合系・Ⅲ類理工系）',
+  hensachi:55, level:'B',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'要（5〜6教科）', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月中旬',
+      shikaku:'数学・理科・情報への強い関心。課外活動実績や英語資格も考慮',
+      naiyou:'書類（自己アピール文・調査書）＋面接（口頭試問あり）',
+      haiten:[
+        {label:'共通テスト（換算後）', points:800, note:'英語圧縮後。情報を含む場合あり'},
+        {label:'面接・口頭試問', points:200, note:'数学・情報系の口頭試問'},
+        {label:'書類評価', points:100, note:'自己アピール文'},
+      ],
+      total_max:1100,
+      biko:'Ⅰ類（情報）・Ⅱ類（融合）・Ⅲ類（理工）の3類構成。工学系志望はⅡ類・Ⅲ類が該当',
+    }
+  ],
+  url:'https://www.uec.ac.jp/admission/',
+  kt_scale:{kokugo:0.5,math1a:2,math2bc:2,phys:1.5,chem:1,rekiko:0,eigo:1,jyouhou:2,max:1000},
+},
+{
+  univ:'名古屋工業大学', verified:true, area:'中部', gakubu:'工学部（各学科）',
+  hensachi:55, level:'B',
+  senko:[
+    { name:'総合型選抜（共通テスト課す型）', kyotsuu:'要', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月〜12月',
+      shikaku:'学科ごとの条件あり。理数への意欲・活動実績を重視',
+      naiyou:'書類＋面接（学力口頭試問含む場合あり）',
+      haiten:[
+        {label:'共通テスト（換算後）', points:900, note:'英語圧縮後。数学・理科重視傾斜あり'},
+        {label:'面接・口頭試問', points:200, note:''},
+        {label:'書類評価', points:100, note:''},
+      ],
+      total_max:1200,
+      biko:'学科により共通テストを課さない方式もあり。各学科の募集要項で詳細を確認',
+    }
+  ],
+  url:'https://www.nitech.ac.jp/examination/',
+  kt_scale:{kokugo:1,math1a:2,math2bc:2,phys:2,chem:2,rekiko:0,eigo:1,jyouhou:0,max:1000},
+},
+{
+  univ:'広島大学', verified:true, area:'中国・四国', gakubu:'工学部（第一〜四類）',
+  hensachi:55, level:'B',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'要', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'各類の求める学生像に合致すること',
+      naiyou:'書類＋面接・口頭試問',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後'},
+        {label:'面接・口頭試問', points:200, note:'理系基礎学力を問う場合あり'},
+        {label:'書類評価', points:100, note:''},
+      ],
+      total_max:1200,
+      biko:'理工系各類を横断する募集。類により条件が大きく異なる',
+    }
+  ],
+  url:'https://www.hiroshima-u.ac.jp/admissions',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1.5,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'金沢大学', verified:true, area:'中部', gakubu:'理工学域（機械・電子・物質化学 等）',
+  hensachi:53, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'要（5〜6教科）', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'現役・既卒可。調査書と自己推薦書必須',
+      naiyou:'書類審査＋面接（口頭試問含む）',
+      haiten:[
+        {label:'共通テスト（換算後）', points:800, note:'英語圧縮後。情報除く場合あり'},
+        {label:'面接・口頭試問', points:200, note:''},
+        {label:'書類評価', points:100, note:'自己推薦書'},
+      ],
+      total_max:1100,
+      biko:'地方国立大の中では比較的募集人員が多め',
+    }
+  ],
+  url:'https://www.kanazawa-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'岡山大学', verified:true, area:'中国・四国', gakubu:'工学部（各学科）',
+  hensachi:52, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'要', kyotsuu_type:'要',
+      shutsugan:'10月', nicchi:'11〜12月',
+      shikaku:'学科ごとの条件。理数の学力と意欲を重視',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後'},
+        {label:'面接', points:200, note:''},
+        {label:'書類評価', points:100, note:''},
+      ],
+      total_max:1200,
+      biko:'実施学科は年度により変動あり。実施確認は各年度の入学者選抜要項で',
+    }
+  ],
+  url:'https://www.okayama-u.ac.jp/tp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'室蘭工業大学', verified:true, area:'北海道', gakubu:'理工学部（各系）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9〜10月', nicchi:'11月前後',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:'理数の基礎学力を問う口頭試問'},
+        {label:'書類評価', points:200, note:'調査書・志望理由書'},
+      ],
+      total_max:500,
+      biko:'共通テストを課さない方式あり。工業系単科大学として実験・実習を重視',
+    }
+  ],
+  url:'https://www.muroran-it.ac.jp/guidance/entrance/',
+  kt_scale:{kokugo:1,math1a:1,math2bc:1,phys:1,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:800},
+},
+{
+  univ:'北見工業大学', verified:true, area:'北海道', gakubu:'工学部（各学科）',
+  hensachi:46, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9〜10月', nicchi:'11月',
+      shikaku:'理工系への関心・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:'調査書・志望理由書'},
+      ],
+      total_max:500,
+      biko:'北海道内の工業系国立大学。小規模で丁寧な指導が特徴',
+    }
+  ],
+  url:'https://www.kitami-it.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1,math2bc:1,phys:1,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:800},
+},
+{
+  univ:'岩手大学', verified:true, area:'東北', gakubu:'理工学部（システム理工・物質科学・社会基盤・電気電子 等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜I（共通テスト免除）', kyotsuu:'不要', kyotsuu_type:'不要',
+      shutsugan:'9月上旬〜中旬', nicchi:'10〜11月',
+      shikaku:'理数への意欲・調査書。学科ごとに評定条件あり',
+      naiyou:'書類審査＋面接・口頭試問（個別学力検査免除）',
+      haiten:[
+        {label:'面接・口頭試問', points:300, note:'共通テスト・個別学力検査ともに免除'},
+        {label:'書類評価', points:200, note:'調査書・志望理由書'},
+      ],
+      total_max:500,
+      biko:'共通テスト・個別学力検査を両方免除する珍しい方式。理工学部・農学部・獣医学部で実施',
+    },
+    { name:'総合型選抜II（共通テスト課す）', kyotsuu:'要', kyotsuu_type:'要',
+      shutsugan:'9月上旬〜中旬', nicchi:'共通テスト後・2月前後',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類審査＋面接（個別学力検査は免除、共通テストで判定）',
+      haiten:[
+        {label:'共通テスト（900点換算）', points:900, note:'英語圧縮後'},
+        {label:'面接', points:200, note:''},
+        {label:'書類評価', points:100, note:''},
+      ],
+      total_max:1200,
+      biko:'個別学力検査を免除し共通テストの成績で判定する方式',
+    }
+  ],
+  url:'https://www.iwate-u.ac.jp/admission/undergraduate/info.html',
+  kt_scale:{kokugo:1,math1a:1,math2bc:1,phys:1,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:800},
+},
+{
+  univ:'山形大学', verified:false, area:'東北', gakubu:'工学部（機械システム・電気電子・化学・建築 等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'学科ごとの条件あり。理数への意欲を重視',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:'調査書・志望理由書'},
+      ],
+      total_max:500,
+      biko:'学科により共通テストを課す方式・課さない方式が混在。募集要項で確認',
+    }
+  ],
+  url:'https://www.yamagata-u.ac.jp/jp/entrance/faculty/guidelines/r08_2/',
+  kt_scale:{kokugo:1,math1a:1,math2bc:1,phys:1,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:800},
+},
+{
+  univ:'秋田大学', verified:false, area:'東北', gakubu:'理工学部（生命科学・物質科学・電気電子・機械工学・土木環境 等）',
+  hensachi:50, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接・口頭試問',
+      haiten:[
+        {label:'面接・口頭試問', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'秋田大学独自の総合型選抜。詳細は学科ごとの募集要項で確認',
+    }
+  ],
+  url:'https://www.akita-u.ac.jp/honbu/exam/',
+  kt_scale:{kokugo:1,math1a:1,math2bc:1,phys:1,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:800},
+},
+{
+  univ:'埼玉大学', verified:true, area:'関東', gakubu:'工学部（機械工学・電気電子物理工学・情報工学・環境社会デザイン 等）',
+  hensachi:55, level:'B',
+  senko:[
+    { name:'総合型選抜（共通テスト免除）', kyotsuu:'不要', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'10〜12月（講義受講・レポート提出含む）',
+      shikaku:'評定平均や指定科目の履修必須。英語民間資格スコア提出を求める学科あり',
+      naiyou:'書類審査（調査書・志望理由書・活動報告書）＋大学講義2回受講後の小テスト・レポート＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'講義後レポート・小テスト', points:200, note:'大学の講義を2回受講し課題を提出'},
+        {label:'書類評価', points:100, note:'調査書・志望理由書・活動報告書'},
+      ],
+      total_max:600,
+      biko:'共通テストを免除する珍しい方式。出願者が20名超の場合は書類による1次選考あり。総合型選抜の合格者は一般選抜の前期・後期日程を受験しても合格扱いとならない（専願）',
+    }
+  ],
+  url:'https://www.saitama-u.ac.jp/entrance/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'新潟大学', verified:true, area:'中部', gakubu:'工学部（力学・情報電子・化学材料・建築・融合領域 等）',
+  hensachi:55, level:'B',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により（基礎学力試験あり）', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'10〜11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類審査＋基礎学力試験（数学）＋面接',
+      haiten:[
+        {label:'基礎学力試験（数学）', points:200, note:'参考問題が大学HPで公開されている'},
+        {label:'面接', points:200, note:''},
+        {label:'書類評価', points:100, note:''},
+      ],
+      total_max:500,
+      biko:'令和7年度より選抜方法に変更あり。基礎学力試験の参考問題は新潟大学工学部HPで確認可能',
+    }
+  ],
+  url:'https://www.eng.niigata-u.ac.jp/guide/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'富山大学', verified:false, area:'中部', gakubu:'理学部／工学部／都市デザイン学部',
+  hensachi:52, level:'C',
+  senko:[
+    { name:'総合型選抜I／II', kyotsuu:'場合により（学部・方式による）', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'10〜11月',
+      shikaku:'学部ごとに条件が異なる。都市デザイン学部の一部方式では特別枠あり',
+      naiyou:'書類＋面接（学部による）',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'総合型選抜IIの一部は富山県特別枠など地域連携枠を含む。学部ごとの募集要項を要確認',
+    }
+  ],
+  url:'https://www.u-toyama.ac.jp/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'福井大学', verified:true, area:'中部', gakubu:'工学部（機械・システム・電気電子情報 等）',
+  hensachi:50, level:'C',
+  senko:[
+    { name:'総合型選抜II', kyotsuu:'要', kyotsuu_type:'要',
+      shutsugan:'9月〜10月', nicchi:'共通テスト後・2月前後',
+      shikaku:'理数への意欲。学科ごとの条件あり',
+      naiyou:'書類審査＋面接',
+      haiten:[
+        {label:'共通テスト（換算後）', points:800, note:'英語圧縮後'},
+        {label:'面接', points:200, note:''},
+        {label:'書類評価', points:100, note:''},
+      ],
+      total_max:1100,
+      biko:'令和10年度に工学部改組予定。今後募集内容が変更される可能性あり',
+    }
+  ],
+  url:'https://www.u-fukui.ac.jp/exams/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'山梨大学', verified:false, area:'中部', gakubu:'工学部（1学科複数コース制：機械・電気電子・土木環境・応用化学 等）',
+  hensachi:50, level:'C',
+  senko:[
+    { name:'総合型選抜・学校推薦型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'8月上旬以降', nicchi:'秋（コースにより異なる）',
+      shikaku:'コースごとの条件あり',
+      naiyou:'書類＋面接・口頭試問（コースによる）',
+      haiten:[
+        {label:'面接・口頭試問', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'工学部は1学科複数コース制。コースごとに選考内容が異なるため募集要項を個別確認',
+    }
+  ],
+  url:'https://www.yamanashi.ac.jp/admission/291',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'信州大学', verified:true, area:'中部', gakubu:'工学部（物質化学・電子情報システム・水環境土木・機械システム・建築 等）',
+  hensachi:52, level:'C',
+  senko:[
+    { name:'総合型選抜I', kyotsuu:'不要', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'10〜11月',
+      shikaku:'学科ごとの条件あり',
+      naiyou:'書類審査＋面接試験（共通テスト・個別学力検査は免除）',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'建築学コースは個別の出願条件あり。一般選抜との第2志望コース選択制度は総合型選抜には適用されない',
+    }
+  ],
+  url:'http://www.shinshu-u.ac.jp/faculty/engineering/admission/undergraduate/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'静岡大学', verified:false, area:'中部', gakubu:'工学部（機械工学・電気電子工学・化学バイオ・数理システム 等）',
+  hensachi:52, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'10〜11月',
+      shikaku:'学科ごとの条件あり。理数への意欲を重視',
+      naiyou:'書類＋面接・口頭試問',
+      haiten:[
+        {label:'面接・口頭試問', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'学科により実施有無・条件が異なる。募集要項で確認すること',
+    }
+  ],
+  url:'https://www.shizuoka.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'豊橋技術科学大学', verified:false, area:'中部', gakubu:'工学部（機械工学・電気電子情報工学・建築・情報・環境社会 等）',
+  hensachi:50, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'10〜11月',
+      shikaku:'工業高校出身者向けの特別選抜枠を含む場合あり',
+      naiyou:'書類＋面接・口頭試問',
+      haiten:[
+        {label:'面接・口頭試問', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'技術科学大学として実践的なものづくり教育が特色。工業高校からの進学者も多い',
+    }
+  ],
+  url:'https://www.tut.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'京都工芸繊維大学', verified:false, area:'近畿', gakubu:'工芸科学部（機械工・電子システム工・情報工・先端ファイブロ 等）',
+  hensachi:55, level:'B',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'10〜11月',
+      shikaku:'学科ごとの条件あり。ものづくり・デザインへの関心を重視',
+      naiyou:'書類＋面接・口頭試問（デザイン系学科は作品提出を求める場合あり）',
+      haiten:[
+        {label:'面接・口頭試問', points:300, note:''},
+        {label:'書類評価・作品評価', points:200, note:'学科により作品ポートフォリオ提出'},
+      ],
+      total_max:500,
+      biko:'デザイン・建築系学科では作品提出が課される場合がある。工芸科学部という名称だが理工系学部',
+    }
+  ],
+  url:'https://www.kit.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1.5,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'九州工業大学', verified:true, area:'九州', gakubu:'工学部／情報工学部（建設社会・機械知能 等）',
+  hensachi:53, level:'C',
+  senko:[
+    { name:'総合型選抜（適性検査型）', kyotsuu:'不要', kyotsuu_type:'不要',
+      shutsugan:'9月上旬', nicchi:'第1段階：書類選考 → 第2段階：適性検査',
+      shikaku:'学びの計画書を第2段階選考で事前提出。学科ごとの条件あり',
+      naiyou:'1次：書類選考（学びの計画書） → 2次：課題解決型記述問題＋適性検査（数学・理科・英語）',
+      haiten:[
+        {label:'適性検査（数学・理科・英語）', points:300, note:'共通テスト・個別学力検査ともに免除'},
+        {label:'課題解決型記述問題', points:200, note:''},
+        {label:'学びの計画書', points:100, note:'第2段階選考で事前提出'},
+      ],
+      total_max:600,
+      biko:'2026年4月に学部改組予定。適性検査型は共通テストを課さない方式',
+    },
+    { name:'総合型選抜（共通テスト型）', kyotsuu:'要（6教科8科目）', kyotsuu_type:'要',
+      shutsugan:'9月上旬', nicchi:'共通テスト後判定',
+      shikaku:'活動報告書の提出が必要',
+      naiyou:'書類審査（活動報告書・課題解決型記述問題）＋共通テスト成績で判定',
+      haiten:[
+        {label:'共通テスト（6教科8科目）', points:900, note:'英語圧縮後'},
+        {label:'課題解決型記述問題', points:200, note:''},
+        {label:'活動報告書', points:100, note:''},
+      ],
+      total_max:1200,
+      biko:'2026年4月に学部改組予定。共通テスト型と適性検査型の2方式併存',
+    }
+  ],
+  url:'https://www.kyutech.ac.jp/examination/gs-admission.html',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'鳥取大学', verified:false, area:'中国・四国', gakubu:'工学部（各学科）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'実施学科は年度により変動あり',
+    }
+  ],
+  url:'https://www.tottori-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'島根大学', verified:false, area:'中国・四国', gakubu:'総合理工学部（材料エネルギー・物理 等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'総合理工学部は材料エネルギー学科・物理学科などで構成',
+    }
+  ],
+  url:'https://www.shimane-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'山口大学', verified:false, area:'中国・四国', gakubu:'工学部（機械工・社会建設工・電気電子情報 等）／国際総合科学部',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'学科ごとの条件あり',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'国際総合科学部は理工系融合のプログラムを含む',
+    }
+  ],
+  url:'https://www.yamaguchi-u.ac.jp/exam/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'徳島大学', verified:false, area:'中国・四国', gakubu:'理工学部（光システム・知的システム 等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'理工学部は光システム・知的システムなどのコース制',
+    }
+  ],
+  url:'https://www.tokushima-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'愛媛大学', verified:false, area:'中国・四国', gakubu:'工学部（機械・電気電子・化学生命・社会基盤 等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'学科ごとの条件あり',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'実施学科・条件は年度により変動あり',
+    }
+  ],
+  url:'https://www.ehime-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'高知大学', verified:false, area:'中国・四国', gakubu:'理工学部（数学物理・情報科学・化学生命理工・地球環境防災 等）',
+  hensachi:46, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'地球環境防災学科など防災・環境分野に特色',
+    }
+  ],
+  url:'https://www.kochi-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'佐賀大学', verified:false, area:'九州', gakubu:'理工学部（数理科学・物理科学・知能情報システム・機能物質化学・都市工学・電気電子工学・機械工学 等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'理工学部は7学科構成の大規模学部',
+    }
+  ],
+  url:'https://www.saga-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'長崎大学', verified:false, area:'九州', gakubu:'工学部（工学科：機械工学・電気電子工学・社会基盤工学・建築学・物質工学・情報工学コース等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'コースごとの条件あり',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'工学科1学科に複数コースを内包する制度',
+    }
+  ],
+  url:'https://www.nagasaki-u.ac.jp/exam/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'熊本大学', verified:false, area:'九州', gakubu:'工学部（機械数理工・材料・応用化学 等）',
+  hensachi:50, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'学科ごとの条件あり',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'材料・応用化学分野で熊本大は西日本でも評価が高い',
+    }
+  ],
+  url:'https://www.kumamoto-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1.5,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'大分大学', verified:false, area:'九州', gakubu:'理工学部（創成理工・共創理工 等）',
+  hensachi:46, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'理数への意欲・調査書',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'創成理工学科・共創理工学科の2学科制',
+    }
+  ],
+  url:'https://www.oita-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'宮崎大学', verified:false, area:'九州', gakubu:'工学部（環境ロボティクス・機械設計システム・電子物理工・社会デザイン工 等）',
+  hensachi:46, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'学科ごとの条件あり',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'環境ロボティクス学科など特色ある学科編成',
+    }
+  ],
+  url:'https://www.miyazaki-u.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'鹿児島大学', verified:false, area:'九州', gakubu:'工学部（機械工学・電気電子工学・建築学・化学生命工 等）',
+  hensachi:48, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'学科ごとの条件あり',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'海洋・水産分野の研究と並び工学部の研究施設も充実',
+    }
+  ],
+  url:'https://www.kagoshima-u.ac.jp/exam/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+{
+  univ:'琉球大学', verified:false, area:'九州', gakubu:'工学部（機械工学・電気システム工・知能情報・社会基盤デザイン 等）',
+  hensachi:46, level:'C',
+  senko:[
+    { name:'総合型選抜', kyotsuu:'場合により', kyotsuu_type:'不要',
+      shutsugan:'9月〜10月', nicchi:'11月',
+      shikaku:'学科ごとの条件あり',
+      naiyou:'書類＋面接',
+      haiten:[
+        {label:'面接', points:300, note:''},
+        {label:'書類評価', points:200, note:''},
+      ],
+      total_max:500,
+      biko:'沖縄唯一の国立大学。離島・沖縄出身者への配慮がある場合あり',
+    }
+  ],
+  url:'https://www.u-ryukyu.ac.jp/admission/',
+  kt_scale:{kokugo:1,math1a:1.5,math2bc:1.5,phys:1.5,chem:1,rekiko:0.5,eigo:1,jyouhou:0,max:900},
+},
+];
+
+// ============================================================
+// 学校推薦型選抜データ（理工学部全体・コース/枠単位）
+// フィールド説明:
+//   univ: 大学名 / area: 地域 / gakubu: 学部名
+//   senko: 選抜区分の配列。各要素は以下を持つ
+//     name: 方式名（学校推薦型選抜I/II、女子枠等）
+//     gakka: 学科・コース・プログラム名
+//     boshu: 募集人員
+//     sengan: '専願' or '併願可'（出願資格の「専願」欄に○があれば専願）
+//     kyotsuu: 共通テストの扱い（'不要'/'要(科目数)'/'要・基準点'）
+//     seiseki: 評定平均条件（あれば数値、なければ'-'）
+//     gakuriki: 学力試験の有無・内容
+//     mensetsu: 面接の有無・内容
+//     ronbun: 小論文の有無
+//     jitsugi: 実技の有無
+//     shorui: 提出書類
+//     shutsugan: 出願期間
+//     shiken: 試験日
+//     happyo: 合格発表日
+//     biko: 備考
+// ============================================================
+const SUISEN_DATA = [
+
+// ===== 北海道 =====
+{
+  univ:'室蘭工業大学', area:'北海道', gakubu:'理工学部（昼間コース）', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'創造工学科', boshu:52, sengan:'専願', kyotsuu:'要(2教科4科目)', seiseki:'-', gakuriki:'共通テスト課す', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'1/26-2/3', shiken:'-', happyo:'2/11', biko:'共通テスト2教科4科目で判定'},
+    {name:'学校推薦型選抜', gakka:'システム理化学科', boshu:38, sengan:'専願', kyotsuu:'要(2教科4科目)', seiseki:'-', gakuriki:'共通テスト課す', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'1/26-2/3', shiken:'-', happyo:'2/11', biko:'共通テスト2教科4科目で判定'},
+  ],
+},
+{
+  univ:'北見工業大学', area:'北海道', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'先進工学科', boshu:95, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力確認試験（数学Ⅰ中心）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/5-11/12', shiken:'12/6', happyo:'12/17', biko:'数・理が特に優秀な者。2年次から4分野制、3年次から9ユニット制に再編'},
+  ],
+},
+
+// ===== 東北 =====
+{
+  univ:'岩手大学', area:'東北', gakubu:'理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'理工学科/化学', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む面接', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/4', biko:'履修条件：物基・化基・生基から2以上＋物・化・生から1以上 等'},
+    {name:'学校推薦型選抜', gakka:'理工学科/数理・物理', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む面接（数・理・英の基礎）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/4', biko:'履修条件：物基・化基＋物・化から1以上 等'},
+    {name:'学校推薦型選抜', gakka:'理工学科/材料科学', boshu:7, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む面接', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/4', biko:'履修条件：物基・化基＋物・化から1以上 等'},
+    {name:'学校推薦型選抜', gakka:'理工学科/情報系', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む面接（数、情報）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/4', biko:'履修：物基/物/理数物理から1以上＋化基/化/理数化学から1以上'},
+    {name:'学校推薦型選抜', gakka:'理工学科/電気電子・情報通信', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む面接（数）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜', gakka:'理工学科/機械知能航空', boshu:15, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む面接（数、物基、英）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜', gakka:'理工学科/社会基盤・環境工学', boshu:20, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む面接（数、理、英）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/4', biko:''},
+  ],
+},
+{
+  univ:'山形大学', area:'東北', gakubu:'工学部（昼間・フレックス）', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（出願要件①）', gakka:'高分子・有機材料工', boshu:31, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（物基・物、化基・化から1）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:'e-ラーニング入学前教育あり'},
+    {name:'学校推薦型選抜I（出願要件①）', gakka:'化学・バイオ工/応用化学・化学工学', boshu:12, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（英、数/物基物/化基化から1）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（出願要件①）', gakka:'化学・バイオ工/バイオ化学工学', boshu:12, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（出願要件①）', gakka:'情報・エレクトロニクス/情報・知能', boshu:12, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（数、英）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（出願要件①）', gakka:'情報・エレクトロニクス/電気・電子通信', boshu:12, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（数、英）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（出願要件①）', gakka:'機械システム工', boshu:26, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（数、物基物、英）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（出願要件①）', gakka:'建築・デザイン', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'集団面接（建築・都市・デザイン題材）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（出願要件②工業高校）', gakka:'高分子・有機材料工 他5学科', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:'工業高校・総合学科（工業20単位以上）出身者対象'},
+    {name:'学校推薦型選抜I（出願要件②工業高校）', gakka:'システム創成工（フレックス）', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:3.3, gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/6', shiken:'11/15', happyo:'12/1', biko:''},
+  ],
+},
+{
+  univ:'秋田大学', area:'東北', gakubu:'総合環境理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（女子枠）', gakka:'応用化学生物（化学・生物・応化コース一括）', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（理2科目から）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'女子限定。全体B段階(3.5)以上かつ数理英各3.5以上'},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'環境数物科学/数理科学・地球環境学', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（数）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'環境数物科学/機能デバイス物理', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（数、理）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'社会システム工/モビリティ', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む（数、理）', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'社会システム工/電気システム', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'社会システム工/社会基盤', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'女子限定。総合環境理工学部は女子枠のみで男子は実施なしの可能性'},
+  ],
+},
+
+// ===== 関東 =====
+{
+  univ:'埼玉大学', area:'関東', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（女子枠）', gakka:'システムデザイン', boshu:7, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:'B以上', gakuriki:'-', mensetsu:'集団面接の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由・自己アピール', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'2/9', biko:'女子限定。理数系(物・数)及び英が優れている者'},
+    {name:'学校推薦型選抜（女子枠）', gakka:'電気電子物理工', boshu:7, sengan:'専願', kyotsuu:'要', seiseki:'B以上', gakuriki:'-', mensetsu:'集団面接の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由・自己アピール', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'2/9', biko:'女子限定'},
+    {name:'学校推薦型選抜（女子枠）', gakka:'情報工', boshu:6, sengan:'専願', kyotsuu:'要(3教科4科目)', seiseki:4.0, gakuriki:'-', mensetsu:'集団面接の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由・自己アピール', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'2/9', biko:'女子限定。数・理の平均4.0以上'},
+    {name:'学校推薦型選抜', gakka:'環境社会デザイン', boshu:10, sengan:'専願', kyotsuu:'要(3教科4科目)', seiseki:'B以上', gakuriki:'-', mensetsu:'集団面接の場合あり', ronbun:'課題文(英文・実験データ含む場合)', jitsugi:'-', shorui:'志望理由・活動実績・自己アピール', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'2/9', biko:'英語検定の成績換算可（共通テスト英語受験は必須）'},
+  ],
+},
+{
+  univ:'筑波大学', area:'関東', gakubu:'理工学群', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（推薦入試）', gakka:'数学類', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'基礎学力評価含む', ronbun:'数学の課題含む', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:'CEFR B1相当の英語資格は総合評価に反映'},
+    {name:'学校推薦型選抜（推薦入試）', gakka:'物理学類', boshu:14, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'基礎学力評価含む', ronbun:'物理学の課題含む', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:'物理オリンピック日本代表選抜者等は評価加点'},
+    {name:'学校推薦型選抜（推薦入試）', gakka:'化学類', boshu:12, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'基礎学力評価含む', ronbun:'化学の課題含む', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:''},
+    {name:'学校推薦型選抜（推薦入試）', gakka:'応用理工学類', boshu:16, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'自然現象等の説明・議論含む', ronbun:'数と英を中心に評価', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:'数か理が上位5%以内など抜群な者'},
+    {name:'学校推薦型選抜（推薦入試）', gakka:'工学システム学類', boshu:20, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'基礎学力の評価含む', ronbun:'数、理、英の基礎力評価含む', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:'数と理の能力が卓越し論理的思考力と表現力に優れる者'},
+    {name:'学校推薦型選抜（推薦入試）', gakka:'社会工学類', boshu:12, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'基礎学力（英語力等）評価含む', ronbun:'英語力・論理的数理的分析力等を判定', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:'文系・理系問わず成績概評A段階の者も対象'},
+  ],
+},
+{
+  univ:'筑波大学', area:'関東', gakubu:'情報学群', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（推薦入試）', gakka:'情報科学類', boshu:12, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'数学の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:''},
+    {name:'学校推薦型選抜（推薦入試）', gakka:'情報メディア創成学類', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'数学の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:''},
+    {name:'学校推薦型選抜（推薦入試）', gakka:'知識情報・図書館学類', boshu:40, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'集団面接（ビブリオバトル）', ronbun:'-', jitsugi:'-', shorui:'活動報告書等', shutsugan:'11/4-11/10', shiken:'11/27-28', happyo:'12/10', biko:''},
+  ],
+},
+{
+  univ:'横浜国立大学', area:'関東', gakubu:'理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'化学・生命系（化学教育/化学応用/バイオ各プログラム）', boshu:33, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:4.0, gakuriki:'-', mensetsu:'数理英の基礎質問含む', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'1/19-1/23', shiken:'2/5', happyo:'2/10', biko:'募集は学科単位。プログラムは2年進級時に決定'},
+    {name:'学校推薦型選抜', gakka:'数物・電子情報系/電子情報システム', boshu:15, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'4.0以上または特定科目4.2', gakuriki:'-', mensetsu:'数理英の基礎質問含む', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'1/19-1/23', shiken:'2/5', happyo:'2/10', biko:'数Ⅲ・C必須'},
+  ],
+},
+{
+  univ:'電気通信大学', area:'関東', gakubu:'情報理工学域', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'Ⅰ類/メディア情報学', boshu:6, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題＋基礎学力検査(CBT)', mensetsu:'非認知能力調査と連動', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:'数学・情報の国際オリンピック受賞歴は評価加点'},
+    {name:'学校推薦型選抜', gakka:'Ⅰ類/経営・社会情報学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題＋基礎学力検査(CBT)', mensetsu:'非認知能力調査と連動', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅰ類/情報数理工学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題＋基礎学力検査(CBT)', mensetsu:'非認知能力調査と連動', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅰ類/コンピュータサイエンス', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題＋基礎学力検査(CBT)', mensetsu:'非認知能力調査と連動', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜（女子枠）', gakka:'Ⅰ類/デザイン思考・データサイエンス', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題＋基礎学力検査(CBT)', mensetsu:'非認知能力調査と連動', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:'女子限定'},
+    {name:'学校推薦型選抜', gakka:'Ⅱ類/セキュリティ情報学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅱ類/情報通信工学', boshu:6, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅱ類/電子情報学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅱ類/計測・制御システム', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅱ類/先端ロボティクス', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅲ類/機械システム', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅲ類/電子工学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅲ類/光工学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅲ類/物理工学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+    {name:'学校推薦型選抜', gakka:'Ⅲ類/化学生命工学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'4.0または数理4.5', gakuriki:'総合問題（英文課題の場合あり）', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18-19', happyo:'12/3', biko:''},
+  ],
+},
+{
+  univ:'千葉大学', area:'関東', gakubu:'情報・データサイエンス学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（一般）', gakka:'情報・データサイエンス', boshu:15, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:4.0, gakuriki:'-', mensetsu:'第1段階で実施', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/23-24', happyo:'12/5(1次)/2/10(最終)', biko:'共通テスト総得点率概ね70%で合格。指定英語検定で加点あり'},
+    {name:'学校推薦型選抜（女子）', gakka:'情報・データサイエンス', boshu:15, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:4.0, gakuriki:'-', mensetsu:'第1段階で実施', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/23-24', happyo:'12/5(1次)/2/10(最終)', biko:'女子限定。一般枠との併願可'},
+  ],
+},
+];
+
+// ============================================================
+// 学校推薦型選抜データ パート2（中部・近畿・九州）
+// ============================================================
+const SUISEN_DATA_2 = [
+{
+  univ:'長岡技術科学大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（工業高校等）', gakka:'機械工学分野', boshu:6, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'数・物・英の試問', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/4', biko:'工業高校・総合学科(工業20単位以上)出身者対象'},
+    {name:'学校推薦型選抜（工業高校等）', gakka:'電気電子情報工学分野', boshu:6, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'数・電気の試問', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜（工業高校等）', gakka:'情報・経営システム工学分野', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'数・情報処理の試問', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/4', biko:'工業・商業・情報学科対象'},
+    {name:'学校推薦型選抜（工業高校等）', gakka:'物質生物工学分野', boshu:7, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'数・英・理1科目の試問', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/4', biko:'工業・農業・水産学科対象'},
+    {name:'学校推薦型選抜（工業高校等）', gakka:'環境社会基盤工学分野', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'数・理1科目の試問', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜（普通科等）', gakka:'全分野（1年次共通、2学期に配属）', boshu:'若干名', sengan:'専願', kyotsuu:'不要', seiseki:'数理各4.0', gakuriki:'-', mensetsu:'数・英の試問', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/4', biko:'数Ⅲ等の履修が必要'},
+  ],
+},
+{
+  univ:'新潟大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜Ⅰ型', gakka:'各学科', boshu:'学科により異なる', sengan:'専願', kyotsuu:'場合により（基礎学力試験あり）', seiseki:'-', gakuriki:'基礎学力試験（数学）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'推薦書', shutsugan:'9月〜10月', shiken:'10〜11月', happyo:'11月', biko:'令和7年度より選抜方法に変更あり。詳細は工学部HPで学科別に確認'},
+  ],
+},
+{
+  univ:'名古屋大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'化学生命工', boshu:7, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'第1次：書類審査・共通テスト。第2次：面接'},
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'物理工', boshu:6, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'マテリアル工', boshu:11, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'電気電子情報工', boshu:6, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'性別不問'},
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'機械・航空宇宙工', boshu:10, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'エネルギー理工', boshu:3, sengan:'専願', kyotsuu:'要(5教科7科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'性別不問'},
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'環境土木・建築/環境土木工学', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（一般枠）', gakka:'環境土木・建築/建築学', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'スケッチ', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'2次選考は実技（スケッチ）'},
+    {name:'共通テストを課す学校推薦型選抜（女子枠）', gakka:'化学生命工', boshu:7, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'女子限定'},
+    {name:'共通テストを課す学校推薦型選抜（女子枠）', gakka:'物理工', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'女子限定'},
+    {name:'共通テストを課す学校推薦型選抜（女子枠）', gakka:'マテリアル工', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'女子限定'},
+    {name:'共通テストを課す学校推薦型選抜（女子枠）', gakka:'電気電子情報工', boshu:6, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'女子限定'},
+    {name:'共通テストを課す学校推薦型選抜（女子枠）', gakka:'機械・航空宇宙工', boshu:5, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'女子限定'},
+    {name:'共通テストを課す学校推薦型選抜（女子枠）', gakka:'エネルギー理工', boshu:3, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/23', shiken:'2/8(2次)', happyo:'2/11', biko:'女子限定'},
+  ],
+},
+{
+  univ:'名古屋工業大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（女子限定）', gakka:'高度工学教育/物理工', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'筆記試験（数、物基物）', mensetsu:'2次面接', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:'女子限定。数Ⅲ履修必要'},
+    {name:'学校推薦型選抜I（女子限定）', gakka:'高度工学教育/電気・機械工', boshu:15, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'筆記試験', mensetsu:'2次面接', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:'女子限定'},
+    {name:'学校推薦型選抜I（女子限定）', gakka:'高度工学教育/情報工', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'筆記試験', mensetsu:'2次面接', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:'女子限定'},
+    {name:'学校推薦型選抜I（女子限定）', gakka:'高度工学教育/社会工/環境都市', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:3.5, gakuriki:'筆記試験', mensetsu:'2次面接', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:'女子限定'},
+    {name:'学校推薦型選抜I', gakka:'高度工学教育/社会工/経営システム', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'AまたはB', gakuriki:'筆記試験（数、物基物/化基化から1）', mensetsu:'2次面接', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:'男女不問'},
+    {name:'学校推薦型選抜I', gakka:'創造工学教育/材料・エネルギー', boshu:15, sengan:'専願', kyotsuu:'不要', seiseki:'AまたはB', gakuriki:'筆記試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'エントリーカード・英語外部試験スコア', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:'指定英語検定で基準点クリアが条件'},
+    {name:'学校推薦型選抜I', gakka:'創造工学教育/情報・社会', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:'AまたはB', gakuriki:'筆記試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'エントリーカード・英語外部試験スコア', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:''},
+    {name:'学校推薦型選抜I（夜間主）', gakka:'基幹工学教育/電気・機械工学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'AまたはB', gakuriki:'-', mensetsu:'数・物基物の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:'専門高校(工業・農業・商業等)出身で就業意志ある者'},
+    {name:'学校推薦型選抜I（夜間主）', gakka:'基幹工学教育/環境都市工学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'AまたはB', gakuriki:'-', mensetsu:'数・物基物の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/12', biko:''},
+    {name:'学校推薦型選抜II', gakka:'高度工学教育/生命・応用化', boshu:20, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'AまたはB', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'1/20-1/23', shiken:'1/30', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'高度工学教育/物理工', boshu:5, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'AまたはB', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'1/20-1/23', shiken:'1/30', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'高度工学教育/電気・機械工', boshu:15, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'AまたはB', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'1/20-1/23', shiken:'1/30', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'高度工学教育/情報工', boshu:10, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'AまたはB', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'1/20-1/23', shiken:'1/30', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'創造工学教育/材料・エネルギー', boshu:9, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'AまたはB', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'1/20-1/23', shiken:'1/30', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'創造工学教育/情報・社会', boshu:6, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'AまたはB', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'エントリーカード', shutsugan:'1/20-1/23', shiken:'1/30', happyo:'2/10', biko:''},
+  ],
+},
+{
+  univ:'京都工芸繊維大学', area:'近畿', gakubu:'工芸科学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜<一般プログラム>', gakka:'応用生物学域/応用生物学', boshu:15, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜<一般プログラム>', gakka:'物質・材料科学域/応用化学', boshu:42, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<一般プログラム>', gakka:'設計工学域/電子システム工学', boshu:18, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<一般プログラム>', gakka:'設計工学域/情報工学', boshu:14, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<一般プログラム>', gakka:'設計工学域/機械工学', boshu:20, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<一般プログラム>', gakka:'デザイン科学域/デザイン・建築学', boshu:10, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'数Ⅲ履修が望ましい'},
+    {name:'学校推薦型選抜<地域創生Tech>', gakka:'応用生物学域/応用生物学', boshu:1, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'京都府内高校または京都府内在住者限定'},
+    {name:'学校推薦型選抜<地域創生Tech>', gakka:'物質・材料科学域/応用化学', boshu:1, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'京都府内限定。数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<地域創生Tech>', gakka:'設計工学域/電子システム工学', boshu:1, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'京都府内限定。数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<地域創生Tech>', gakka:'設計工学域/情報工学', boshu:1, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'京都府内限定。数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<地域創生Tech>', gakka:'設計工学域/機械工学', boshu:1, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'京都府内限定。数Ⅲ履修必要'},
+    {name:'学校推薦型選抜<地域創生Tech>', gakka:'デザイン科学域/デザイン・建築学', boshu:2, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/21-1/28', shiken:'-', happyo:'2/10', biko:'京都府内限定。数Ⅲ履修が望ましい'},
+  ],
+},
+{
+  univ:'大阪大学', area:'近畿', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'応用自然科学', boshu:22, sengan:'専願', kyotsuu:'要(6教科8科目・基礎学力確認用)', seiseki:'-', gakuriki:'-', mensetsu:'2次選考', ronbun:'-', jitsugi:'-', shorui:'志望理由書・研究成果概要', shutsugan:'11/1-11/7', shiken:'12/21(2次)', happyo:'2/10', biko:'要件①自由研究等②SEEDSプログラム③コンテスト出場④数理評定4.3以上⑤英語検定のいずれか'},
+    {name:'学校推薦型選抜', gakka:'応用理工', boshu:25, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'2次選考', ronbun:'-', jitsugi:'-', shorui:'志望理由書・研究成果概要', shutsugan:'11/1-11/7', shiken:'12/21(2次)', happyo:'2/10', biko:'同上の出願要件'},
+    {name:'学校推薦型選抜', gakka:'電子情報工', boshu:17, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'2次選考', ronbun:'-', jitsugi:'-', shorui:'志望理由書・研究成果概要', shutsugan:'11/1-11/7', shiken:'12/21(2次)', happyo:'2/10', biko:'同上の出願要件'},
+    {name:'学校推薦型選抜', gakka:'環境・エネルギー工', boshu:8, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'2次選考', ronbun:'-', jitsugi:'-', shorui:'志望理由書・研究成果概要', shutsugan:'11/1-11/7', shiken:'12/21(2次)', happyo:'2/10', biko:'同上の出願要件'},
+    {name:'学校推薦型選抜', gakka:'地球総合工', boshu:12, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'2次選考', ronbun:'-', jitsugi:'-', shorui:'志望理由書・研究成果概要', shutsugan:'11/1-11/7', shiken:'12/21(2次)', happyo:'2/10', biko:'同上の出願要件'},
+  ],
+},
+{
+  univ:'大阪大学', area:'近畿', gakubu:'基礎工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（一般枠）', gakka:'電子物理科学', boshu:9, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜（女性枠）', gakka:'電子物理科学', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:'女子限定。一般枠との併願可'},
+    {name:'学校推薦型選抜（一般枠）', gakka:'化学応用科学', boshu:9, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜（女性枠）', gakka:'化学応用科学', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:'女子限定。一般枠との併願可'},
+    {name:'学校推薦型選抜（一般枠）', gakka:'システム科学', boshu:18, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜（女性枠）', gakka:'システム科学', boshu:8, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:'女子限定。一般枠との併願可'},
+    {name:'学校推薦型選抜（一般枠）', gakka:'情報科学', boshu:9, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜（女性枠）', gakka:'情報科学', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/1-11/7', shiken:'2/7(2次)', happyo:'2/10', biko:'女子限定。一般枠との併願可'},
+  ],
+},
+{
+  univ:'神戸大学', area:'近畿', gakubu:'システム情報学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（女子枠）', gakka:'システム情報学部', boshu:15, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:4.0, gakuriki:'-', mensetsu:'2次選考', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/1-11/7', shiken:'12/6(2次)', happyo:'2/10', biko:'女子限定。数Ⅱ・Ⅲ・A・B・C、物・化等の履修必要。共通テスト成績上位者から合格'},
+  ],
+},
+{
+  univ:'九州大学', area:'九州', gakubu:'芸術工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'インダストリアルデザイン', boshu:8, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'2次面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'1/31(2次)', happyo:'2/10', biko:'工学部本体ではなく芸術工学部のみで実施'},
+    {name:'学校推薦型選抜', gakka:'未来構想デザイン', boshu:5, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:4.0, gakuriki:'-', mensetsu:'2次面接', ronbun:'小論文（2次）', jitsugi:'-', shorui:'自己活動評価書・テーマ作文', shutsugan:'11/4-11/7', shiken:'1/31(2次)', happyo:'2/10', biko:'出願時にテーマ作文（課題文）提出'},
+  ],
+},
+{
+  univ:'九州工業大学', area:'九州', gakubu:'工学部／情報工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I', gakka:'工/建設社会類', boshu:13, sengan:'専願', kyotsuu:'不要', seiseki:'数理優秀または全体3.8以上', gakuriki:'適性検査（英=CBT、数理=面接口頭試問）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:'2026年度学部改組予定。英語外部資格で換算点に置換可'},
+    {name:'学校推薦型選抜I', gakka:'工/機械類', boshu:29, sengan:'専願', kyotsuu:'不要', seiseki:'数理優秀または全体3.8以上', gakuriki:'適性検査（英=CBT、数理=面接口頭試問）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'工/電気類', boshu:31, sengan:'専願', kyotsuu:'不要', seiseki:'数理優秀または全体3.8以上', gakuriki:'適性検査（英=CBT、数理=面接口頭試問）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'工/物質理工学類', boshu:31, sengan:'専願', kyotsuu:'不要', seiseki:'数理優秀または全体3.8以上', gakuriki:'適性検査（英=CBT、数理=面接口頭試問。理=物または化）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'情報工/知能情報類', boshu:28, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'適性検査（英数理。CBT。理=物化生から1）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:'2026年度学部改組予定。職業学科出身者は数学範囲を変更可'},
+    {name:'学校推薦型選抜I', gakka:'情報工/電子情報通信類', boshu:19, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'適性検査（英数理。CBT）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'情報工/知的システム類', boshu:19, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'適性検査（英数理。CBT）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'情報工/生命情報類', boshu:19, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'適性検査（英数理。CBT）', mensetsu:'口頭試問・主体性評価', ronbun:'-', jitsugi:'-', shorui:'主体性等申告書', shutsugan:'11/4-11/7', shiken:'11/27-28', happyo:'12/5', biko:''},
+  ],
+},
+
+];
+
+// ============================================================
+// 学校推薦型選抜データ パート3（中部追加分・中国四国詳細化）
+// 既存のプレースホルダー（verified:false）エントリを置き換える
+// ============================================================
+const SUISEN_DATA_3 = [
+
+{
+  univ:'福井大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（高大接続型）', gakka:'機械システム工（女子特別枠含む全10名）', boshu:20, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'プレゼンテーション・口頭発表と質疑応答含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/3', biko:'女子特別枠10名程度を含む。当日提示資料とテーマで手書き発表資料を作成'},
+    {name:'学校推薦型選抜I', gakka:'電気電子情報工', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/3', biko:'専門高校・総合学科枠（若干名）も別途あり'},
+    {name:'学校推薦型選抜I（高大接続型）', gakka:'建築・都市環境工', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'プレゼンテーション・口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書・課題レポート', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/3', biko:'専門高校・総合学科対象。高校での取り組みと成果に関するレポート使用'},
+    {name:'学校推薦型選抜I（高大接続型）', gakka:'物質・生命化', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/15', happyo:'12/3', biko:''},
+  ],
+  url:'https://www2.sundai.ac.jp/nyushi-info/suisen-nyushi/univ/suisen2026_1225.html',
+},
+{
+  univ:'山梨大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（一般枠）', gakka:'クリーンエネルギー化学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'化学の素養・基礎知識含む', jitsugi:'-', shorui:'多面的・総合的評価申告書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'合格者は入学前教育必須'},
+    {name:'学校推薦型選抜I（一般枠）', gakka:'応用化学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'化学の素養・基礎知識含む', jitsugi:'-', shorui:'多面的・総合的評価申告書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I（一般枠）', gakka:'土木環境工学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'科学・技術に関する講義内容について出題', jitsugi:'-', shorui:'多面的・総合的評価申告書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I（一般枠）', gakka:'コンピュータ理工学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'数・物・英に関する内容を出題', jitsugi:'-', shorui:'多面的・総合的評価申告書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I（一般枠）', gakka:'機械工学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'科学・技術関連。英語の素養を問う内容含む場合あり', jitsugi:'-', shorui:'多面的・総合的評価申告書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I（一般枠）', gakka:'メカトロニクス', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'科学・技術に関する内容', jitsugi:'-', shorui:'多面的・総合的評価申告書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I（一般枠）', gakka:'電気電子工学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'電気・電子工学に関する内容', jitsugi:'-', shorui:'多面的・総合的評価申告書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'クリーンエネルギー化学／応用化学／土木環境工学／コンピュータ理工学／機械工学／メカトロニクス／電気電子工学', boshu:14, sengan:'専願', kyotsuu:'不要', seiseki:'3.8以上または理4.0以上', gakuriki:'-', mensetsu:'-', ronbun:'各学科専門領域に関する内容', jitsugi:'-', shorui:'多面的・総合的評価申告書・志望理由書', shutsugan:'11/4-11/11', shiken:'11/22', happyo:'12/5', biko:'女子限定。各学科2名ずつ計14名。一般枠と同一選考内容、別枠選考'},
+  ],
+  url:'https://www2.sundai.ac.jp/nyushi-info/suisen-nyushi/univ/suisen2026_1235.html',
+},
+{
+  univ:'信州大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I', gakka:'先鋭融合', boshu:7, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:'2026年度から1学科10コースに改組予定（旧5学科13プログラム）。出願条件は教科の優秀さ・課外活動実績・資格等いずれか'},
+    {name:'学校推薦型選抜I', gakka:'応用化学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'環境・エネルギー材料', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'水環境・土木', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'電気電子', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'機械物理', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'知能機械', boshu:6, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'建築学', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書・面接時スケッチ持参', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'情報サイエンス', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'情報デザイン', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/4', biko:''},
+  ],
+  url:'http://www.shinshu-u.ac.jp/faculty/engineering/admission/undergraduate/',
+},
+{
+  univ:'静岡大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'共通テストを課す学校推薦型選抜（推薦Ⅱ）', gakka:'機械工', boshu:18, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/26-1/30', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（推薦Ⅱ）', gakka:'電気電子工', boshu:8, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問・筆記解答含む', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/26-1/30', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（推薦Ⅱ）', gakka:'電子物質科学', boshu:7, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/26-1/30', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（推薦Ⅱ）', gakka:'化学バイオ工', boshu:12, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問・筆記解答含む', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/26-1/30', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'共通テストを課す学校推薦型選抜（推薦Ⅱ）', gakka:'数理システム工', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/26-1/30', shiken:'2/7', happyo:'2/10', biko:''},
+  ],
+  url:'https://www.shizuoka.ac.jp/admission/',
+},
+{
+  univ:'豊橋技術科学大学', area:'中部', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（工業系学科対象）', gakka:'機械工学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'素養調査（数・英）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'11/27', happyo:'12/12', biko:'工業高校・総合学科（工業20単位以上）対象'},
+    {name:'学校推薦型選抜（工業系学科対象）', gakka:'電気・電子情報工学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'素養調査（数・英）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'11/27', happyo:'12/12', biko:''},
+    {name:'学校推薦型選抜（工業・商業・情報系学科対象）', gakka:'情報・知能工学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'素養調査（数・英）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'11/27', happyo:'12/12', biko:'商業・情報学科は情報科目15単位以上'},
+    {name:'学校推薦型選抜（工業・農業系学科対象）', gakka:'応用化学・生命工学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'素養調査（数・英）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'11/27', happyo:'12/12', biko:''},
+    {name:'学校推薦型選抜（工業・農業系学科対象）', gakka:'建築・都市システム学', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'素養調査（数・英）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'11/27', happyo:'12/12', biko:'農業土木科も対象'},
+    {name:'学校推薦型選抜（普通科・理数科対象）', gakka:'学部一括（5学科より選択）', boshu:15, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'素養調査（数・英）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'11/27', happyo:'12/12', biko:'普通科・理数科対象。それ以外は数Ⅲ等の必須履修科目あり'},
+  ],
+  url:'https://www.tut.ac.jp/admission/',
+},
+
+// ===== 中国・四国（詳細化） =====
+{
+  univ:'鳥取大学', area:'中国・四国', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I', gakka:'機械物理系', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'数学・物理の基礎学力に関する口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/1', biko:'工業学科・総合学科の工学分野対象。合格者には入学前教育を実施'},
+    {name:'学校推薦型選抜I', gakka:'電気情報系', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'数学・物理の基礎学力に関する口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I', gakka:'社会システム土木系', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'物理・数学の基礎学力に関する口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/4-11/7', shiken:'11/22', happyo:'12/1', biko:'農業土木関連学科も対象'},
+    {name:'学校推薦型選抜II', gakka:'電気情報系', boshu:12, sengan:'専願', kyotsuu:'要(3教科4科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/20-1/23', shiken:'2/6', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'化学バイオ系', boshu:8, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/20-1/23', shiken:'12/6', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'社会システム土木系', boshu:5, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/20-1/23', shiken:'12/6', happyo:'2/10', biko:''},
+  ],
+  url:'https://www.tottori-u.ac.jp/admission/',
+},
+{
+  univ:'島根大学', area:'中国・四国', gakubu:'総合理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜II（女子枠）', gakka:'総合理工（学科一括）', boshu:20, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/27', shiken:'2/5', happyo:'2/10', biko:'女子限定。総合理工学部は女子枠のみで実施（男子向け一般枠の確認は取れず）'},
+  ],
+  url:'https://www.shimane-u.ac.jp/admission/',
+},
+{
+  univ:'島根大学', area:'中国・四国', gakubu:'材料エネルギー学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜II（女子枠）', gakka:'材料エネルギー', boshu:6, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/20-1/27', shiken:'2/5', happyo:'2/10', biko:'女子限定。材料エネルギー学部も女子枠のみで実施'},
+  ],
+  url:'https://www.shimane-u.ac.jp/admission/',
+},
+{
+  univ:'岡山大学', area:'中国・四国', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I', gakka:'機械システム系', boshu:60, sengan:'専願', kyotsuu:'不要', seiseki:'4.3以上または一般選抜合格相当', gakuriki:'-', mensetsu:'口述試験含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'12/6', happyo:'12/22', biko:'4系合計170名程度（機械・環境社会基盤・情報電気数理データサイエンス・化学生命）'},
+    {name:'学校推薦型選抜I', gakka:'環境・社会基盤系', boshu:30, sengan:'専願', kyotsuu:'不要', seiseki:'4.3以上または一般選抜合格相当', gakuriki:'総合問題（図表・データ・実験図・英文資料含む場合あり）', mensetsu:'口述試験含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'12/6', happyo:'12/22', biko:''},
+    {name:'学校推薦型選抜I', gakka:'情報・電気・数理データサイエンス系', boshu:40, sengan:'専願', kyotsuu:'不要', seiseki:'4.3以上または一般選抜合格相当', gakuriki:'総合問題（図表・データ・実験図・英文資料含む場合あり）', mensetsu:'口述試験含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'12/6', happyo:'12/22', biko:''},
+    {name:'学校推薦型選抜I', gakka:'化学・生命系', boshu:40, sengan:'専願', kyotsuu:'不要', seiseki:'4.3以上または一般選抜合格相当', gakuriki:'-', mensetsu:'口述試験含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/11', shiken:'12/6', happyo:'12/22', biko:''},
+  ],
+  url:'https://www.okayama-u.ac.jp/tp/admission/',
+},
+{
+  univ:'広島大学', area:'中国・四国', gakubu:'情報科学部', verified:true,
+  senko:[
+    {name:'光り輝き入試 学校推薦型選抜（地方創生枠・一般枠）', gakka:'情報科学', boshu:30, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（オンデマンド講義内容に関連した数学）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・推薦要件証明書類', shutsugan:'11/1-11/6', shiken:'11/15', happyo:'12/2', biko:'広島県「ひろしまDX人材育成奨学金」希望者対象。サマーキャンプ・GSC・数学情報オリンピック等参加経験が条件'},
+    {name:'光り輝き入試 学校推薦型選抜（地方創生枠・女子枠）', gakka:'情報科学', boshu:15, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（オンデマンド講義内容に関連した数学）', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・推薦要件証明書類', shutsugan:'11/1-11/6', shiken:'11/15', happyo:'12/2', biko:'女子限定。一般枠との併願可'},
+  ],
+  url:'https://www.hiroshima-u.ac.jp/admissions',
+},
+{
+  univ:'広島大学', area:'中国・四国', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜', gakka:'第一〜四類', boshu:0, sengan:'-', kyotsuu:'-', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'-', shiken:'-', happyo:'-', biko:'広島大学工学部本体での学校推薦型選抜は2026年度駿台リストで確認できず。実施なしと判断（情報科学部のみ実施）'},
+  ],
+  url:'https://www.hiroshima-u.ac.jp/admissions',
+},
+{
+  univ:'山口大学', area:'中国・四国', gakubu:'工学部（2026年度改組：2学科12コース制）', verified:true,
+  senko:[
+    {name:'学校推薦型選抜II', gakka:'創成工/機械系', boshu:9, sengan:'専願', kyotsuu:'要(6教科8科目または4教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/12-12/17', shiken:'1/22', happyo:'2/10', biko:'2026年度から旧工学部7学科を2学科12コース制+情報学部1学科4コース制に改組再編予定'},
+    {name:'学校推薦型選抜II', gakka:'創成工/国土・環境デザイン系', boshu:10, sengan:'専願', kyotsuu:'要(6教科8科目または4教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/12-12/17', shiken:'1/22', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'創成工/化学系', boshu:8, sengan:'専願', kyotsuu:'要(6教科8科目または4教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/12-12/17', shiken:'1/22', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'創成工/電気電子系', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目または4教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/12-12/17', shiken:'1/22', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'建築', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目または4教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/12-12/17', shiken:'1/22', happyo:'2/10', biko:''},
+  ],
+  url:'https://www.yamaguchi-u.ac.jp/exam/',
+},
+{
+  univ:'山口大学', area:'中国・四国', gakubu:'情報学部（2026年度新設）', verified:true,
+  senko:[
+    {name:'学校推薦型選抜II', gakka:'情報', boshu:18, sengan:'専願', kyotsuu:'要(4教科5科目または5教科6科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/12-12/17', shiken:'1/22', happyo:'2/10', biko:'旧工学部から独立して新設予定の情報学部1学科4コース制'},
+  ],
+  url:'https://www.yamaguchi-u.ac.jp/exam/',
+},
+{
+  univ:'徳島大学', area:'中国・四国', gakubu:'理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（理工学経験重視型）', gakka:'社会基盤デザイン', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:4.5, gakuriki:'-', mensetsu:'口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/4-11/10', shiken:'11/21', happyo:'12/15', biko:'工業高校出身者対象。数Ⅰ・Ⅱ+工業数理基礎or数Ⅲ必須'},
+    {name:'学校推薦型選抜I（理工学経験重視型）', gakka:'機械科学', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:4.5, gakuriki:'-', mensetsu:'口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/4-11/10', shiken:'11/21', happyo:'12/15', biko:'工業高校出身者対象'},
+    {name:'学校推薦型選抜I（理工学経験重視型）', gakka:'応用化学システム', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:4.5, gakuriki:'-', mensetsu:'口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/4-11/10', shiken:'11/21', happyo:'12/15', biko:'工業高校出身者対象'},
+    {name:'学校推薦型選抜I（理工学経験重視型）', gakka:'電気電子システム', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:4.5, gakuriki:'-', mensetsu:'口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/4-11/10', shiken:'11/21', happyo:'12/15', biko:'工業高校出身者対象'},
+    {name:'学校推薦型選抜I（理工学経験重視型）', gakka:'知能情報', boshu:1, sengan:'専願', kyotsuu:'不要', seiseki:4.5, gakuriki:'-', mensetsu:'口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/4-11/10', shiken:'11/21', happyo:'12/15', biko:'工業高校出身者対象'},
+    {name:'学校推薦型選抜I（理工学経験重視型）', gakka:'光システム', boshu:1, sengan:'専願', kyotsuu:'不要', seiseki:4.5, gakuriki:'-', mensetsu:'口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/4-11/10', shiken:'11/21', happyo:'12/15', biko:'工業高校出身者対象'},
+    {name:'学校推薦型選抜I（次世代光フロンティア入試）', gakka:'光システム', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'数学に関する口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'11/4-11/10', shiken:'11/21', happyo:'12/15', biko:'指定英語検定の成績が条件。普通科・理数科・専門学科で履修条件異なる'},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'数理科学', boshu:6, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:'共通テスト総得点が全国平均の90%以上が目安'},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'自然科学', boshu:9, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'社会基盤デザイン', boshu:24, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:'共通テスト総得点が全国平均程度が目安'},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'機械科学', boshu:25, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'応用化学システム', boshu:24, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'数英理の口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'電気電子システム', boshu:22, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'数学の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'知能情報', boshu:23, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'数英の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（主体性・創造性重視型）', gakka:'光システム', boshu:10, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:3.5, gakuriki:'-', mensetsu:'数英の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'医光/医工融合プログラム', boshu:15, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/20-1/23', shiken:'2/8', happyo:'2/10', biko:'大学卒業もしくは大学院修了まで一貫教育。他コース変更不可'},
+  ],
+  url:'https://www.tokushima-u.ac.jp/admission/',
+},
+{
+  univ:'愛媛大学', area:'中国・四国', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（工業学科対象）', gakka:'電気電子工学', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'数物英の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'11/1-11/7', shiken:'11/23', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'材料デザイン工学', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'数理の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'11/1-11/7', shiken:'11/23', happyo:'12/5', biko:'普通科・工業・理数・総合学科対象'},
+    {name:'学校推薦型選抜I', gakka:'化学・生命科学', boshu:7, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'11/1-11/7', shiken:'11/23', happyo:'12/5', biko:'化学（理数化学）履修必須'},
+    {name:'学校推薦型選抜I', gakka:'デジタル情報人材育成特別プログラム', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'数学の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'11/1-11/7', shiken:'11/23', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'社会基盤工学', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'国数英の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'11/1-11/7', shiken:'11/23', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜I', gakka:'社会デザイン', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:4.0, gakuriki:'-', mensetsu:'国数英の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'11/1-11/7', shiken:'11/23', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜II', gakka:'機械工学', boshu:12, sengan:'専願', kyotsuu:'要(5教科7科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'12/8-12/12', shiken:'1/31', happyo:'2/9', biko:'理科は物基または物必須'},
+    {name:'学校推薦型選抜II', gakka:'知能システム学', boshu:3, sengan:'専願', kyotsuu:'要(5教科7科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'12/8-12/12', shiken:'1/31', happyo:'2/9', biko:''},
+    {name:'学校推薦型選抜II', gakka:'電気電子工学', boshu:8, sengan:'専願', kyotsuu:'要(3教科4科目)', seiseki:'-', gakuriki:'-', mensetsu:'数英の口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'12/8-12/12', shiken:'1/31', happyo:'2/9', biko:''},
+    {name:'学校推薦型選抜II', gakka:'コンピュータ科学', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'12/8-12/12', shiken:'1/31', happyo:'2/9', biko:''},
+    {name:'学校推薦型選抜II', gakka:'応用情報工学', boshu:4, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'12/8-12/12', shiken:'1/31', happyo:'2/9', biko:''},
+    {name:'学校推薦型選抜II', gakka:'材料デザイン工学', boshu:12, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'12/8-12/12', shiken:'1/31', happyo:'2/9', biko:''},
+    {name:'学校推薦型選抜II', gakka:'化学・生命科学', boshu:13, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'活動実績', shutsugan:'12/8-12/12', shiken:'1/31', happyo:'2/9', biko:''},
+  ],
+  url:'https://www.ehime-u.ac.jp/admission/',
+},
+{
+  univ:'高知大学', area:'中国・四国', gakubu:'理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I', gakka:'数学物理', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:3.8, gakuriki:'-', mensetsu:'プレゼンテーション（数）含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/2-11/7', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I', gakka:'情報科学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:3.8, gakuriki:'-', mensetsu:'口頭試問（情報）含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/2-11/7', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I', gakka:'生物科学', boshu:10, sengan:'専願', kyotsuu:'不要', seiseki:3.8, gakuriki:'-', mensetsu:'口頭試問（生・地学から1）含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/2-11/7', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I', gakka:'化学生命理工', boshu:13, sengan:'専願', kyotsuu:'不要', seiseki:3.8, gakuriki:'-', mensetsu:'口頭試問（化・生から1）含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/2-11/7', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I', gakka:'地球環境防災', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:3.8, gakuriki:'-', mensetsu:'口頭試問（物・化・地学から1）含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/2-11/7', shiken:'11/15', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜II', gakka:'数学物理', boshu:4, sengan:'専願', kyotsuu:'要(5教科7科目)', seiseki:3.8, gakuriki:'-', mensetsu:'口頭試問（数または物）含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書・活動報告書', shutsugan:'1/19-1/23', shiken:'1/31', happyo:'2/11', biko:''},
+  ],
+  url:'https://www.kochi-u.ac.jp/admission/',
+},
+];
+
+// ============================================================
+// 学校推薦型選抜データ パート4（九州詳細化）
+// ============================================================
+const SUISEN_DATA_4 = [
+
+{
+  univ:'佐賀大学', area:'九州', gakubu:'理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（情報系）', gakka:'情報分野/データサイエンス・知能情報システム', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力・学習力テスト（タブレットCBT・数学）', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書', shutsugan:'11/1-11/6', shiken:'11/21', happyo:'12/2', biko:'専門系の科または総合学科で情報分野関連20単位以上'},
+    {name:'学校推薦型選抜I（工業系）', gakka:'化学分野/化学', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力・学習力テスト（数学・化学）', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書', shutsugan:'11/1-11/6', shiken:'11/21', happyo:'12/2', biko:''},
+    {name:'学校推薦型選抜I（工業系）', gakka:'機械工学分野/機械工学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力・学習力テスト（数学・物理）', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書', shutsugan:'11/1-11/6', shiken:'11/21', happyo:'12/2', biko:''},
+    {name:'学校推薦型選抜I（工業系）', gakka:'電気電子工学分野/電気電子工学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力・学習力テスト（数学・物理）', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書', shutsugan:'11/1-11/6', shiken:'11/21', happyo:'12/2', biko:''},
+    {name:'学校推薦型選抜I（工業系）', gakka:'都市工学分野/都市基盤工学・建築環境デザイン', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力・学習力テスト（数学・物理）', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書', shutsugan:'11/1-11/6', shiken:'11/21', happyo:'12/2', biko:''},
+    {name:'学校推薦型選抜I（普通系一般枠）', gakka:'情報分野/データサイエンス・知能情報システム', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力・学習力テスト（数学）', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書', shutsugan:'11/1-11/6', shiken:'11/21', happyo:'12/2', biko:'普通科・理数科対象。女子枠との併願可'},
+    {name:'学校推薦型選抜I（普通系女子枠）', gakka:'情報分野/データサイエンス・知能情報システム', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎学力・学習力テスト（数学）', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'活動報告書', shutsugan:'11/1-11/6', shiken:'11/21', happyo:'12/2', biko:'女子限定。一般枠との併願可'},
+  ],
+  url:'https://www.saga-u.ac.jp/admission/',
+},
+{
+  univ:'長崎大学', area:'九州', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜II（一般枠）', gakka:'機械工学', boshu:7, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:3.6, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/15-12/23', shiken:'1/27', happyo:'2/11', biko:'女子は一般枠と女子枠の併願可（同一コース限定）。共通テスト・面接得点率60%未満は不合格'},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'電気電子工学', boshu:6, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:3.6, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/15-12/23', shiken:'1/27', happyo:'2/11', biko:''},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'構造工学', boshu:7, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:3.6, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/15-12/23', shiken:'1/27', happyo:'2/11', biko:''},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'社会環境デザイン工学', boshu:2, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:3.6, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/15-12/23', shiken:'1/27', happyo:'2/11', biko:''},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'化学・物質工学', boshu:8, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:3.6, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/15-12/23', shiken:'1/27', happyo:'2/11', biko:''},
+    {name:'学校推薦型選抜II（女子枠）', gakka:'機械工学・電気電子工学・構造工学・社会環境デザイン工学・化学物質工学（5コース合計）', boshu:12, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:3.6, gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'12/15-12/23', shiken:'1/27', happyo:'2/11', biko:'女子限定。一般枠との併願可（同一コースのみ）'},
+  ],
+  url:'https://www.nagasaki-u.ac.jp/exam/',
+},
+{
+  univ:'熊本大学', area:'九州', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜II（ア）', gakka:'土木建築', boshu:31, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/19-1/23', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（ア）', gakka:'機械数理工', boshu:21, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問を含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/19-1/23', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（ア）', gakka:'情報電気工', boshu:25, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/19-1/23', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（ア）', gakka:'材料・応用化', boshu:32, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問を含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/19-1/23', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（ア）', gakka:'半導体デバイス工学課程', boshu:5, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'1/19-1/23', shiken:'2/7', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（イ・専門高校）', gakka:'土木建築/機械数理工/情報電気工/材料応用化/半導体デバイス工学（各若干名）', boshu:0, sengan:'専願', kyotsuu:'要(3教科4科目)', seiseki:'A最上位相当', gakuriki:'-', mensetsu:'口頭試問の場合あり', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'1/19-1/23', shiken:'2/7', happyo:'2/10', biko:'4学科1課程で若干名ずつ。各分野関連の専門高校・総合学科対象'},
+  ],
+  url:'https://www.kumamoto-u.ac.jp/admission/',
+},
+{
+  univ:'大分大学', area:'九州', gakubu:'理工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜I（一般推薦）', gakka:'知能情報システム', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:'物または化の履修必須'},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'知能情報システム', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接・女子枠面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:'女子限定'},
+    {name:'学校推薦型選抜I（一般推薦）', gakka:'DX人材育成基盤', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'DX人材育成基盤', boshu:1, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接・女子枠面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:'女子限定'},
+    {name:'学校推薦型選抜I（一般推薦）', gakka:'電気エネルギー・電子工学', boshu:9, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'電気エネルギー・電子工学', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接・女子枠面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:'女子限定'},
+    {name:'学校推薦型選抜I（一般推薦）', gakka:'機械工学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'基礎能力試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'機械工学', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'基礎能力試験', mensetsu:'集団面接・女子枠面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:'女子限定'},
+    {name:'学校推薦型選抜I（一般推薦）', gakka:'知能機械システム', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'知能機械システム', boshu:1, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接・女子枠面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:'女子限定'},
+    {name:'学校推薦型選抜I（一般推薦）', gakka:'生命・物質化学', boshu:8, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:''},
+    {name:'学校推薦型選抜I（女子枠）', gakka:'生命・物質化学', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'基礎能力試験', mensetsu:'集団面接・女子枠面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'12/1', biko:'女子限定'},
+    {name:'学校推薦型選抜II（一般推薦）', gakka:'建築学', boshu:3, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'2/10', biko:'物理履修必須'},
+    {name:'学校推薦型選抜II（女子枠）', gakka:'建築学', boshu:2, sengan:'専願', kyotsuu:'要(6教科8科目)', seiseki:'-', gakuriki:'-', mensetsu:'個人面接・女子枠面接', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/7', shiken:'11/19', happyo:'2/10', biko:'女子限定'},
+  ],
+  url:'https://www.oita-u.ac.jp/admission/',
+},
+{
+  univ:'宮崎大学', area:'九州', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜（宮崎県就職希望枠・普通科）', gakka:'化学生命', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:'宮崎県内就職希望者対象'},
+    {name:'学校推薦型選抜（女子枠）', gakka:'化学生命', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜（一般枠）', gakka:'化学生命', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜（宮崎県就職希望枠・普通科）', gakka:'土木環境', boshu:5, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜（女子枠）', gakka:'土木環境', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜（一般枠）', gakka:'土木環境', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜（女子枠）', gakka:'半導体サイエンス', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜（一般枠）', gakka:'半導体サイエンス', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜（宮崎県就職希望枠・普通科）', gakka:'電気電子システム', boshu:4, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜（女子枠）', gakka:'電気電子システム', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜（宮崎県就職希望枠・普通科）', gakka:'機械知能', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜（女子枠）', gakka:'機械知能', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:'女子限定'},
+    {name:'学校推薦型選抜（宮崎県就職希望枠・普通科）', gakka:'情報通信', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:''},
+    {name:'学校推薦型選抜（女子枠）', gakka:'情報通信', boshu:3, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'筆記試験（数）', mensetsu:'あり', ronbun:'小論文', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/17-18', happyo:'12/5', biko:'女子限定。各学科に宮崎県就職枠・専門学科枠・女子枠・一般枠の4トラックあり'},
+  ],
+  url:'https://www.miyazaki-u.ac.jp/admission/',
+},
+{
+  univ:'鹿児島大学', area:'九州', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'総合型選抜（自己推薦型選抜）', gakka:'先進工/機械工学', boshu:5, sengan:'専願', kyotsuu:'要(2教科2科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/4-11/6', shiken:'12/13', happyo:'2/10', biko:'総合型選抜（自己推薦型）も併せて実施'},
+    {name:'総合型選抜（自己推薦型選抜）', gakka:'建築/建築学', boshu:5, sengan:'専願', kyotsuu:'要(3教科5科目)', seiseki:'-', gakuriki:'-', mensetsu:'口頭試問含む', ronbun:'-', jitsugi:'-', shorui:'自己推薦書', shutsugan:'11/4-11/6', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜I（専門教育学科対象）', gakka:'先進工/機械工学', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'A',gakuriki:'-', mensetsu:'-', ronbun:'数物基の基礎学力含む', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18', happyo:'12/4', biko:'機械科・機械工学科・機械電子科等対象'},
+    {name:'学校推薦型選抜I（普通科等）', gakka:'先進工/機械工学', boshu:6, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'-', ronbun:'数物基の基礎学力含む', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18', happyo:'12/4', biko:''},
+    {name:'学校推薦型選抜I', gakka:'先進工/電気電子工学', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'-', gakuriki:'-', mensetsu:'基礎学力・電気電子常識含む', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18', happyo:'12/4', biko:'電気・電子・情報科等対象'},
+    {name:'学校推薦型選抜I', gakka:'先進工/海洋土木工学', boshu:2, sengan:'専願', kyotsuu:'不要', seiseki:'A', gakuriki:'-', mensetsu:'-', ronbun:'基礎学力含む', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/4-11/6', shiken:'11/18', happyo:'12/4', biko:'普通科対象'},
+    {name:'学校推薦型選抜II', gakka:'先進工/機械工学', boshu:10, sengan:'専願', kyotsuu:'要(3教科3科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'先進工/電気電子工学', boshu:10, sengan:'専願', kyotsuu:'要(3教科3科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:'普通科またはこれに準ずる学科対象'},
+    {name:'学校推薦型選抜II（専門学科等）', gakka:'先進工/海洋土木工学', boshu:2, sengan:'専願', kyotsuu:'要(2教科3科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（普通科等）', gakka:'先進工/海洋土木工学', boshu:10, sengan:'専願', kyotsuu:'要(2教科3科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門学科等）', gakka:'先進工/化学工学', boshu:2, sengan:'専願', kyotsuu:'要(2〜3教科3科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（普通科等）', gakka:'先進工/化学工学', boshu:6, sengan:'専願', kyotsuu:'要(2教科3科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'先進工/化学生命工学', boshu:9, sengan:'専願', kyotsuu:'要(2教科4科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門学科等）', gakka:'先進工/情報・生体工学', boshu:4, sengan:'専願', kyotsuu:'要(5教科6科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（普通科等）', gakka:'先進工/情報・生体工学', boshu:15, sengan:'専願', kyotsuu:'要(2教科3科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II', gakka:'建築/建築学', boshu:11, sengan:'専願', kyotsuu:'要(5教科7科目)', seiseki:'-', gakuriki:'-', mensetsu:'-', ronbun:'-', jitsugi:'-', shorui:'-', shutsugan:'11/21-11/26', shiken:'12/13', happyo:'2/10', biko:''},
+  ],
+  url:'https://www.kagoshima-u.ac.jp/exam/',
+},
+{
+  univ:'琉球大学', area:'九州', gakubu:'工学部', verified:true,
+  senko:[
+    {name:'学校推薦型選抜II（一般枠）', gakka:'機械工学', boshu:5, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門高校・総合学科枠）', gakka:'機械工学', boshu:2, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:'工業・水産・商工農高校対象'},
+    {name:'学校推薦型選抜II（女子枠）', gakka:'機械工学', boshu:4, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:'女子限定'},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'エネルギー機械工学', boshu:3, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門高校枠）', gakka:'エネルギー機械工学', boshu:2, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（女子枠）', gakka:'エネルギー機械工学', boshu:2, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:'女子限定'},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'電気システム工学', boshu:8, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門高校枠）', gakka:'電気システム工学', boshu:1, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'電子情報通信', boshu:6, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門高校枠）', gakka:'電子情報通信', boshu:1, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'社会基盤デザイン', boshu:4, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門高校枠）', gakka:'社会基盤デザイン', boshu:2, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（女子枠）', gakka:'社会基盤デザイン', boshu:4, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:'女子限定'},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'建築学', boshu:9, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門高校枠）', gakka:'建築学', boshu:1, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（一般枠）', gakka:'知能情報', boshu:11, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+    {name:'学校推薦型選抜II（専門高校枠）', gakka:'知能情報', boshu:3, sengan:'専願', kyotsuu:'要(4教科6科目)', seiseki:3.5, gakuriki:'-', mensetsu:'あり', ronbun:'-', jitsugi:'-', shorui:'志望理由書', shutsugan:'11/1-11/6', shiken:'12/3', happyo:'2/10', biko:''},
+  ],
+  url:'https://www.u-ryukyu.ac.jp/admission/',
+},
+];
+
+const ALL_SUISEN = SUISEN_DATA.concat(SUISEN_DATA_2).concat(SUISEN_DATA_3).concat(SUISEN_DATA_4);
+
+// ========== 状態 ==========
+let activeLv='all', activeKt='all', activeVf='all', activePeriod=0;
+const PERIOD_LABELS=['4月 河合ソラ第1回マーク','6月 進研マーク','7月 河合第2回マーク','9月 駿台マーク','10月 進研マーク','11月 全統共通テスト対策','1月 Kパック'];
+const periodScores=[null,null,null,null,null,null,null];
+let sActiveSengan='all', sActiveKt='all', sActiveMethod='all', sActiveVf='all';
+
+// ========== タブ切替 ==========
+function switchTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+}
+
+// ========== DB描画 ==========
+function getFiltered(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const area=document.getElementById('area').value;
+  const sort=document.getElementById('db-sort').value;
+  const hlScore=parseInt(document.getElementById('hl-score').value)||0;
+  let list=DATA.filter(d=>{
+    if(activeLv!=='all'&&d.level!==activeLv)return false;
+    if(activeKt!=='all'){
+      const match=d.senko.some(s=>s.kyotsuu_type===activeKt);
+      if(!match)return false;
+    }
+    if(area!=='all'&&d.area!==area)return false;
+    if(activeVf==='verified'&&!d.verified)return false;
+    if(activeVf==='unverified'&&d.verified)return false;
+    if(q){
+      const hay=[d.univ,d.gakubu,d.area,...d.senko.map(s=>s.name+s.shikaku+s.naiyou+s.biko)].join(' ').toLowerCase();
+      if(!hay.includes(q))return false;
+    }
+    return true;
+  });
+  list.sort((a,b)=>{
+    if(sort==='hd')return b.hensachi-a.hensachi;
+    if(sort==='ha')return a.hensachi-b.hensachi;
+    if(sort==='sa')return a.senko[0].shutsugan.localeCompare(b.senko[0].shutsugan);
+    if(sort==='na')return a.univ.localeCompare(b.univ,'ja');
+    return 0;
+  });
+  return{list,hlScore};
+}
+
+function scoreToHensachi(raw1000){
+  const p=raw1000/10;
+  if(p>=72)return 70;if(p>=68)return 65;if(p>=64)return 62;
+  if(p>=60)return 58;if(p>=55)return 55;if(p>=50)return 52;
+  return 48;
+}
+
+function renderDB(){
+  const{list,hlScore}=getFiltered();
+  const cl=document.getElementById('card-list');
+  const em=document.getElementById('db-empty');
+  document.getElementById('db-count').textContent=list.length;
+  const note=document.getElementById('hl-note');
+  if(hlScore>0){
+    const th=scoreToHensachi(hlScore);
+    note.textContent=`素点 ${hlScore}点（得点率 ${Math.round(hlScore/10)}%）→ 偏差値 ${th} 前後の大学をハイライト`;
+    note.classList.add('show');
+  }else{note.classList.remove('show');}
+  cl.innerHTML='';
+  if(!list.length){em.style.display='block';return;}
+  em.style.display='none';
+  const th=hlScore?scoreToHensachi(hlScore):0;
+  list.forEach(d=>{
+    const hl=hlScore&&Math.abs(d.hensachi-th)<=5;
+    const div=document.createElement('div');
+    div.className='card'+(hl?' highlighted':'');
+    const senkoHtml=d.senko.map((s,si)=>`
+      <div class="dpanel ${si===0?'active':''}" id="dp_${d.univ.replace(/\s/g,'')}_${si}">
+        <div class="info-grid">
+          <div class="info-item"><label>出願資格・条件</label><p>${s.shikaku}</p></div>
+          <div class="info-item"><label>選考内容</label><p>${s.naiyou}</p></div>
+          <div class="info-item"><label>共通テスト</label><p>${s.kyotsuu}</p></div>
+          <div class="info-item"><label>出願時期 / 選考日程</label><p>${s.shutsugan} / ${s.nicchi}</p></div>
+          <div class="info-item full">
+            <label>試験科目・配点</label>
+            <table class="score-tbl">
+              <tr><th>項目</th><th>配点</th><th>備考</th></tr>
+              ${s.haiten.map(h=>`<tr><td>${h.label}</td><td style="text-align:right;white-space:nowrap">${h.points.toLocaleString()}点</td><td style="color:var(--hint)">${h.note}</td></tr>`).join('')}
+              <tr style="font-weight:700"><td>合計（目安）</td><td style="text-align:right">${s.total_max.toLocaleString()}点</td><td style="color:var(--hint)">大学により変動あり</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="biko-box">📌 ${s.biko}</div>
+      </div>
+    `).join('');
+    const dtabHtml=d.senko.length>1?`<div class="detail-tabs">${d.senko.map((s,si)=>`<div class="dtab ${si===0?'active':''}" onclick="switchDtab('${d.univ.replace(/\s/g,'')}',${si},this)">${s.name}</div>`).join('')}</div>`:'';
+    div.innerHTML=`
+      <div class="card-hd" onclick="this.parentElement.classList.toggle('open')">
+        <div class="card-hd-l">
+          <div class="hbadge lv${d.level}"><span class="lv">${d.level}</span><span class="nm">${d.hensachi}</span></div>
+          <div class="ctitle">
+            <h3>${d.univ}${d.verified?'':' <span class="vbadge">概要のみ</span>'}</h3>
+            <div class="gk">${d.gakubu}</div>
+            <div class="ctags">
+              ${d.senko.map(s=>`<span class="ctag ct-k">${s.name}</span><span class="ctag ct-s">${s.kyotsuu}</span><span class="ctag ct-d">出願:${s.shutsugan}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+        <span class="toggle-ic">▼</span>
+      </div>
+      <div class="card-body">
+        ${dtabHtml}
+        ${senkoHtml}
+        <div style="margin-top:10px"><a href="${d.url}" target="_blank" rel="noopener" class="url-link">🔗 大学公式入試情報ページ →</a></div>
+      </div>`;
+    cl.appendChild(div);
+  });
+}
+
+function switchDtab(key,idx,el){
+  const tabs=el.closest('.detail-tabs').querySelectorAll('.dtab');
+  tabs.forEach((t,i)=>{
+    t.classList.toggle('active',i===idx);
+    const p=document.getElementById(`dp_${key}_${i}`);
+    if(p)p.classList.toggle('active',i===idx);
+  });
+}
+
+function resetDB(){
+  document.getElementById('search').value='';
+  document.getElementById('area').value='all';
+  document.getElementById('hl-score').value='';
+  document.getElementById('db-sort').value='hd';
+  activeLv='all';activeKt='all';activeVf='all';
+  document.querySelectorAll('#lv-chips .chip').forEach(c=>c.classList.toggle('active',c.dataset.lv==='all'));
+  document.querySelectorAll('#kt-chips .chip').forEach(c=>c.classList.toggle('active',c.dataset.kt==='all'));
+  document.querySelectorAll('#vf-chips .chip').forEach(c=>c.classList.toggle('active',c.dataset.vf==='all'));
+  renderDB();
+}
+
+// チップ
+document.querySelectorAll('#lv-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  activeLv=c.dataset.lv;
+  document.querySelectorAll('#lv-chips .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');renderDB();
+}));
+document.querySelectorAll('#kt-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  activeKt=c.dataset.kt;
+  document.querySelectorAll('#kt-chips .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');renderDB();
+}));
+document.querySelectorAll('#vf-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  activeVf=c.dataset.vf;
+  document.querySelectorAll('#vf-chips .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');renderDB();
+}));
+['search','area','db-sort','hl-score'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',renderDB);
+  el.addEventListener('change',renderDB);
+});
+
+// ========== 学校推薦型選抜 描画ロジック ==========
+function getFilteredSuisen(){
+  const q=document.getElementById('s-search').value.toLowerCase();
+  const area=document.getElementById('s-area').value;
+
+  // 大学単位でフィルタしつつ、各大学内の該当する選抜区分だけ残す
+  let result=[];
+  ALL_SUISEN.forEach(d=>{
+    if(area!=='all'&&d.area!==area)return;
+    if(sActiveVf==='verified'&&!d.verified)return;
+    if(sActiveVf==='unverified'&&d.verified)return;
+
+    let matchedSenko=d.senko.filter(s=>{
+      if(sActiveSengan!=='all'){
+        const isSengan=s.sengan==='専願';
+        if(sActiveSengan==='専願'&&!isSengan)return false;
+        if(sActiveSengan==='併願可'&&isSengan)return false;
+      }
+      if(sActiveKt!=='all'){
+        if(sActiveKt==='要'&&!s.kyotsuu.startsWith('要'))return false;
+        if(sActiveKt==='不要'&&s.kyotsuu!=='不要')return false;
+        if(sActiveKt==='場合により'&&!s.kyotsuu.includes('場合'))return false;
+      }
+      if(sActiveMethod!=='all'){
+        if(sActiveMethod==='gakuriki'&&(!s.gakuriki||s.gakuriki==='-'))return false;
+        if(sActiveMethod==='ronbun'&&(!s.ronbun||s.ronbun==='-'))return false;
+        if(sActiveMethod==='jitsugi'&&(!s.jitsugi||s.jitsugi==='-'))return false;
+      }
+      if(q){
+        const hay=[d.univ,d.gakubu,s.name,s.gakka,s.biko].join(' ').toLowerCase();
+        if(!hay.includes(q))return false;
+      }
+      return true;
+    });
+
+    if(matchedSenko.length>0){
+      result.push({...d, senko:matchedSenko});
+    }
+  });
+  return result;
+}
+
+function renderSuisen(){
+  const list=getFilteredSuisen();
+  const cl=document.getElementById('s-card-list');
+  const em=document.getElementById('s-empty');
+  let totalSenko=0;
+  list.forEach(d=>totalSenko+=d.senko.length);
+  document.getElementById('s-count').textContent=list.length;
+  document.getElementById('s-senko-count').textContent=totalSenko;
+
+  cl.innerHTML='';
+  if(!list.length){em.style.display='block';return;}
+  em.style.display='none';
+
+  list.forEach(d=>{
+    const div=document.createElement('div');
+    div.className='card';
+    const senkoHtml=d.senko.map((s,si)=>{
+      const senganBadge=s.sengan==='専願'
+        ? '<span class="ctag" style="background:#fde8e8;color:#8c1a1a;border-color:#e8b0b0;">専願</span>'
+        : '<span class="ctag" style="background:#e6f3dc;color:#1a5020;border-color:#b0d8b0;">併願可</span>';
+      return `
+      <div class="info-grid" style="margin-bottom:14px;padding-bottom:14px;${si<d.senko.length-1?'border-bottom:1px solid var(--border);':''}">
+        <div class="info-item full">
+          <label>${s.name}　${s.gakka}</label>
+          <p style="margin-top:4px;">${senganBadge}
+            <span class="ctag ct-s">共通テスト：${s.kyotsuu}</span>
+            ${s.seiseki&&s.seiseki!=='-'?`<span class="ctag" style="background:#eef2fc;color:#1a4080;border-color:#c0d0f0;">評定：${s.seiseki}</span>`:''}
+          </p>
+        </div>
+        <div class="info-item"><label>募集人員</label><p>${s.boshu}名</p></div>
+        <div class="info-item"><label>出願期間 / 試験日 / 発表</label><p>${s.shutsugan} / ${s.shiken} / ${s.happyo}</p></div>
+        <div class="info-item"><label>学力試験</label><p>${s.gakuriki&&s.gakuriki!=='-'?s.gakuriki:'なし'}</p></div>
+        <div class="info-item"><label>面接</label><p>${s.mensetsu&&s.mensetsu!=='-'?s.mensetsu:'なし'}</p></div>
+        <div class="info-item"><label>小論文</label><p>${s.ronbun&&s.ronbun!=='-'?s.ronbun:'なし'}</p></div>
+        <div class="info-item"><label>実技</label><p>${s.jitsugi&&s.jitsugi!=='-'?s.jitsugi:'なし'}</p></div>
+        <div class="info-item full"><label>提出書類</label><p>${s.shorui||'-'}</p></div>
+        ${s.biko?`<div class="info-item full"><div class="biko-box">📌 ${s.biko}</div></div>`:''}
+      </div>`;
+    }).join('');
+
+    div.innerHTML=`
+      <div class="card-hd" onclick="this.parentElement.classList.toggle('open')">
+        <div class="card-hd-l">
+          <div class="ctitle">
+            <h3>${d.univ}${d.verified?'':' <span class="vbadge">概要のみ</span>'}</h3>
+            <div class="gk">${d.gakubu}</div>
+            <div class="ctags">
+              <span class="ctag ct-k">選抜区分 ${d.senko.length}件</span>
+              <span class="ctag ct-d">${d.area}</span>
+            </div>
+          </div>
+        </div>
+        <span class="toggle-ic">▼</span>
+      </div>
+      <div class="card-body">${senkoHtml}</div>`;
+    cl.appendChild(div);
+  });
+}
+
+function resetSuisen(){
+  document.getElementById('s-search').value='';
+  document.getElementById('s-area').value='all';
+  sActiveSengan='all';sActiveKt='all';sActiveMethod='all';sActiveVf='all';
+  document.querySelectorAll('#s-sengan-chips .chip').forEach(c=>c.classList.toggle('active',c.dataset.sengan==='all'));
+  document.querySelectorAll('#s-kt-chips .chip').forEach(c=>c.classList.toggle('active',c.dataset.kt==='all'));
+  document.querySelectorAll('#s-method-chips .chip').forEach(c=>c.classList.toggle('active',c.dataset.method==='all'));
+  document.querySelectorAll('#s-vf-chips .chip').forEach(c=>c.classList.toggle('active',c.dataset.vf==='all'));
+  renderSuisen();
+}
+
+document.querySelectorAll('#s-sengan-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  sActiveSengan=c.dataset.sengan;
+  document.querySelectorAll('#s-sengan-chips .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');renderSuisen();
+}));
+document.querySelectorAll('#s-kt-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  sActiveKt=c.dataset.kt;
+  document.querySelectorAll('#s-kt-chips .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');renderSuisen();
+}));
+document.querySelectorAll('#s-method-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  sActiveMethod=c.dataset.method;
+  document.querySelectorAll('#s-method-chips .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');renderSuisen();
+}));
+document.querySelectorAll('#s-vf-chips .chip').forEach(c=>c.addEventListener('click',()=>{
+  sActiveVf=c.dataset.vf;
+  document.querySelectorAll('#s-vf-chips .chip').forEach(x=>x.classList.remove('active'));
+  c.classList.add('active');renderSuisen();
+}));
+['s-search','s-area'].forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener('input',renderSuisen);
+  el.addEventListener('change',renderSuisen);
+});
+
+// ========== 模試タブ ==========
+function getScores(){
+  const ids=['s0','s1','s2','s3','s4','s5','s6r','s6l','s7'];
+  return ids.map(id=>parseFloat(document.getElementById(id).value)||0);
+}
+
+function calcTotal(scores){
+  const[ko,m1,m2,ph,ch,re,er,el,jo]=scores;
+  const raw=ko+m1+m2+ph+ch+re+er+el+jo;
+  const eng100=(er+el)/2;
+  const total900=ko+m1+m2+ph+ch+re+eng100+jo;
+  return{raw,total900,pct:total900/9};
+}
+
+document.querySelectorAll('.score-form input').forEach(el=>{
+  el.addEventListener('input',()=>{
+    const sc=getScores();
+    const{raw,total900,pct}=calcTotal(sc);
+    document.getElementById('total-raw').textContent=Math.round(raw)+' 点';
+    document.getElementById('total-900').textContent=Math.round(total900);
+    document.getElementById('total-pct').textContent=pct.toFixed(1);
+  });
+});
+
+function switchPeriod(idx,el){
+  // 現在の得点を保存
+  periodScores[activePeriod]=getScores();
+  activePeriod=idx;
+  document.querySelectorAll('.ptab').forEach((t,i)=>t.classList.toggle('active',i===idx));
+  // 復元
+  const saved=periodScores[idx];
+  const ids=['s0','s1','s2','s3','s4','s5','s6r','s6l','s7'];
+  ids.forEach((id,i)=>{document.getElementById(id).value=saved?saved[i]||'':'';});
+  const sc=getScores();const{raw,total900,pct}=calcTotal(sc);
+  document.getElementById('total-raw').textContent=Math.round(raw)+' 点';
+  document.getElementById('total-900').textContent=Math.round(total900);
+  document.getElementById('total-pct').textContent=pct.toFixed(1);
+}
+
+function renderTrendChart(){
+  const wrap=document.getElementById('trend-chart-wrap');
+  const pts=periodScores.map(s=>s?calcTotal(s).total900:null);
+  const labels=['4月','6月','7月','9月','10月','11月','1月'];
+  const validVals=pts.filter(v=>v!==null);
+  if(validVals.length===0){
+    wrap.innerHTML='<div style="font-size:12px;color:var(--hint);text-align:center;padding:20px 0;">得点を入力すると推移グラフが表示されます</div>';
+    return;
+  }
+  const w=560,h=140,padL=36,padR=12,padT=14,padB=22;
+  const minV=Math.min(...validVals)*0.92, maxV=900;
+  const xStep=(w-padL-padR)/(labels.length-1);
+  const yScale=v=>padT+(h-padT-padB)*(1-(v-minV)/(maxV-minV));
+  let pathD='', dots='', labelsSvg='';
+  let lastX=null,lastY=null,started=false;
+  pts.forEach((v,i)=>{
+    const x=padL+xStep*i;
+    labelsSvg+=`<text x="${x}" y="${h-4}" font-size="10" fill="var(--hint)" text-anchor="middle">${labels[i]}</text>`;
+    if(v===null)return;
+    const y=yScale(v);
+    if(!started){pathD+=`M${x},${y}`;started=true;}
+    else{pathD+=` L${x},${y}`;}
+    dots+=`<circle cx="${x}" cy="${y}" r="4" fill="var(--accent-md)" stroke="#fff" stroke-width="1.5"/>`;
+    dots+=`<text x="${x}" y="${y-10}" font-size="10" fill="var(--accent)" text-anchor="middle" font-weight="700">${Math.round(v)}</text>`;
+  });
+  const svg=`<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:auto;display:block;">
+    <line x1="${padL}" y1="${padT}" x2="${padL}" y2="${h-padB}" stroke="var(--border)" stroke-width="1"/>
+    <line x1="${padL}" y1="${h-padB}" x2="${w-padR}" y2="${h-padB}" stroke="var(--border)" stroke-width="1"/>
+    <path d="${pathD}" fill="none" stroke="var(--accent-md)" stroke-width="2"/>
+    ${dots}
+    ${labelsSvg}
+  </svg>`;
+  wrap.innerHTML=svg;
+}
+
+function calcJudge(){
+  periodScores[activePeriod]=getScores();
+  const sc=getScores();
+  const{raw,total900,pct}=calcTotal(sc);
+  const[ko,m1,m2,ph,ch,re,er,el,jo]=sc;
+  const eng100=(er+el)/2;
+
+  // 推移更新（7時点）
+  for(let i=0;i<7;i++){
+    const s=periodScores[i];
+    const tv=document.getElementById('tr'+i);
+    const tp=document.getElementById('tr'+i+'p');
+    if(s){
+      const{total900:t9}=calcTotal(s);
+      tv.textContent=Math.round(t9)+'点';
+      tp.textContent='（得点率 '+(t9/9).toFixed(1)+'%）';
+    }else{
+      tv.textContent='−';
+      tp.textContent='';
+    }
+  }
+  renderTrendChart();
+
+  document.getElementById('result-period-label').textContent='（'+PERIOD_LABELS[activePeriod]+'のデータで判定）';
+
+  // 大学別換算・判定
+  const area=document.getElementById('result-area');
+  area.innerHTML='';
+  if(!raw){area.innerHTML='<div class="no-score">得点を入力してください</div>';return;}
+  const sorted=[...DATA].sort((a,b)=>b.hensachi-a.hensachi);
+  sorted.forEach(d=>{
+    // 換算
+    const ks=d.kt_scale;
+    const conv=ko*ks.kokugo+m1*ks.math1a+m2*ks.math2bc+ph*ks.phys+ch*ks.chem+re*ks.rekiko+eng100*ks.eigo+jo*ks.jyouhou;
+    const convPct=Math.min(100,conv/ks.max*100);
+    // 偏差値→必要得点率目安
+    const needed=hensachiToNeedPct(d.hensachi);
+    const diff=convPct-needed;
+    let judge,jclass;
+    if(diff>=5){judge='A判定';jclass='j-A';}
+    else if(diff>=0){judge='B判定';jclass='j-B';}
+    else if(diff>=-5){judge='C判定';jclass='j-C';}
+    else if(diff>=-12){judge='D判定';jclass='j-D';}
+    else{judge='E判定';jclass='j-E';}
+
+    const rc=document.createElement('div');
+    rc.className='result-card';
+    rc.innerHTML=`
+      <div class="result-hd" onclick="this.parentElement.classList.toggle('open')" style="cursor:pointer">
+        <div class="hbadge lv${d.level}"><span class="lv">${d.level}</span><span class="nm">${d.hensachi}</span></div>
+        <div class="result-info"><h3>${d.univ}</h3><div class="gk">${d.gakubu}</div></div>
+        <div class="judge">
+          <span class="judge-badge ${jclass}">${judge}</span>
+          <span class="pts">換算 ${Math.round(conv)}点 / ${ks.max}点（${convPct.toFixed(1)}%）</span>
+          <span class="pts" style="color:var(--hint)">目標得点率：${needed}%以上が目安</span>
+        </div>
+      </div>
+      <div class="result-detail">
+        <div style="font-size:11px;color:var(--sub);margin-bottom:6px;">
+          ※換算方式：各科目に大学ごとの係数を掛けて算出した目安です。実際の換算は大学公式の配点で確認してください。
+        </div>
+        <div class="score-bars">
+          <div class="bar-row">
+            <span class="bar-label">あなたの換算得点率</span>
+            <div class="bar-track"><div class="bar-fill" style="width:${convPct.toFixed(1)}%;background:var(--accent-md)"></div></div>
+            <span class="bar-val">${convPct.toFixed(1)}%</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">目標ライン（目安）</span>
+            <div class="bar-track"><div class="bar-fill" style="width:${needed}%;background:#c04040"></div></div>
+            <span class="bar-val">${needed}%</span>
+          </div>
+        </div>
+        <div class="judge-history" style="margin-top:10px;">
+          <label style="font-size:10px;font-weight:700;color:var(--hint);display:block;margin-bottom:4px;">時期別判定履歴</label>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;">
+            ${periodScores.map((s,i)=>{
+              if(!s)return `<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:var(--bg);color:var(--hint);">${['4月','6月','7月','9月','10月','11月','1月'][i]}: −</span>`;
+              const[pko,pm1,pm2,pph,pch,pre,per,pel,pjo]=s;
+              const peng100=(per+pel)/2;
+              const pconv=pko*ks.kokugo+pm1*ks.math1a+pm2*ks.math2bc+pph*ks.phys+pch*ks.chem+pre*ks.rekiko+peng100*ks.eigo+pjo*ks.jyouhou;
+              const pconvPct=Math.min(100,pconv/ks.max*100);
+              const pdiff=pconvPct-needed;
+              let pj='E',pc='#c04040';
+              if(pdiff>=5){pj='A';pc='#2a8a3a';}
+              else if(pdiff>=0){pj='B';pc='#5ab85a';}
+              else if(pdiff>=-5){pj='C';pc='#d4a017';}
+              else if(pdiff>=-12){pj='D';pc='#d47017';}
+              return `<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:${pc};color:#fff;font-weight:700;">${['4月','6月','7月','9月','10月','11月','1月'][i]}: ${pj}</span>`;
+            }).join('')}
+          </div>
+        </div>
+      </div>`;
+    area.appendChild(rc);
+  });
+}
+
+function hensachiToNeedPct(h){
+  if(h>=70)return 82;if(h>=65)return 76;if(h>=62)return 72;
+  if(h>=60)return 68;if(h>=58)return 64;if(h>=55)return 60;
+  if(h>=52)return 56;if(h>=50)return 52;return 48;
+}
+
+// ========== 初期描画 ==========
+renderDB();
+renderSuisen();
+renderTrendChart();
+</script>
+</body>
+</html>

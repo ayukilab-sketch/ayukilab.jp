@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <link rel="canonical" href="https://www.ayukilab.jp/kyozai/k_0011.html">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>電位シミュレーター - AyukiLab</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="../image/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../image/favicon-16.png">
+  <link rel="shortcut icon" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/apple-touch-icon.png">
+  <style>
+/* シミュレーター固有スタイル */
+.sim-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(248,182,200,0.45);
+  overflow: hidden;
+  padding: 16px;
+}
+#graph-wrap {
+  border: 1px solid #f8b6c8;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  transition: all 0.2s;
+}
+#graph-wrap.hidden { display: none; }
+#graph-canvas { display:block; width:100%; height:140px; }
+#map-wrap {
+  border: 1px solid #f8b6c8;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background: #0a0a14;
+}
+#field-canvas { display:block; width:100%; touch-action:none; }
+#toolbar {
+  position: absolute;
+  bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(10,10,20,0.72);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 0.5px solid rgba(255,255,255,0.14);
+  border-radius: 40px;
+  padding: 5px 12px;
+}
+.tb-btn {
+  width:36px; height:36px; border-radius:50%; border:none;
+  background:transparent; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  color:rgba(255,255,255,0.55); transition:background 0.15s,color 0.15s;
+}
+.tb-btn:hover { background:rgba(255,255,255,0.1); color:#fff; }
+.tb-btn.on { background:rgba(248,182,200,0.28); color:#f8b6c8; }
+.tb-sep { width:0.5px; height:18px; background:rgba(255,255,255,0.15); margin:0 2px; }
+#slice-hint {
+  position:absolute; top:8px; left:10px;
+  font-size:10px; color:rgba(255,230,0,0.65);
+  pointer-events:none; line-height:1.7;
+}
+#popup {
+  display:none; position:absolute;
+  background:rgba(18,10,14,0.96);
+  border:0.5px solid rgba(248,182,200,0.3);
+  border-radius:14px; padding:12px 14px;
+  color:#fff; z-index:20; min-width:164px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+#popup.show { display:block; }
+#popup-title { font-size:11px; color:rgba(255,255,255,0.4); margin-bottom:8px; }
+#pop-sign-row { display:flex; gap:6px; margin-bottom:10px; }
+.sign-btn {
+  flex:1; padding:6px; border-radius:8px;
+  border:0.5px solid rgba(255,255,255,0.18);
+  background:transparent; color:rgba(255,255,255,0.6);
+  font-size:13px; cursor:pointer; transition:all 0.15s;
+  font-family:"Yu Gothic","Hiragino Sans",sans-serif;
+}
+.sign-btn.active-pos { background:rgba(216,90,48,0.35); color:#ffaa80; border-color:#D85A30; }
+.sign-btn.active-neg { background:rgba(55,138,221,0.35); color:#80c0ff; border-color:#378ADD; }
+#pop-mag-label { font-size:11px; color:rgba(255,255,255,0.4); display:flex; justify-content:space-between; margin-bottom:4px; }
+#pop-mag { width:100%; accent-color:#f8b6c8; }
+#popup-close {
+  margin-top:10px; width:100%; padding:5px;
+  border-radius:8px; border:0.5px solid rgba(255,255,255,0.15);
+  background:transparent; color:rgba(255,255,255,0.45);
+  font-size:12px; cursor:pointer;
+  font-family:"Yu Gothic","Hiragino Sans",sans-serif;
+}
+#popup-close:hover { background:rgba(255,255,255,0.08); color:#fff; }
+.usage-tag {
+  display: inline-block;
+  background: #f8b6c8;
+  color: #8b5a2b;
+  border-radius: 20px;
+  font-size: 13px;
+  padding: 3px 12px;
+  margin: 4px 4px 4px 0;
+  font-weight: bold;
+}
+.container h2 {
+  font-size: 22px;
+  color: #8b5a2b;
+  border-left: 5px solid #f8b6c8;
+  padding-left: 12px;
+  margin: 36px 0 14px;
+}
+.container p, .container li { font-size:15px; line-height:1.8; color:#4a3b2a; }
+.container ol { padding-left:20px; }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header>
+  <div class="logo"><a href="../index.html">Ayuki Lab</a></div>
+  <nav class="pc-nav">
+    <ul>
+      <li><a href="../index.html">ホーム</a></li>
+      <li><a href="#">サイト紹介</a></li>
+      <li><a href="#">教材メニュー</a></li>
+      <li><a href="#">お問い合わせ</a></li>
+    </ul>
+  </nav>
+  <div class="menu-toggle" id="menu-toggle">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<!-- モバイルメニュー -->
+<nav id="nav-menu">
+  <ul>
+    <li><a href="../index.html">ホーム</a></li>
+    <li><a href="#">サイト紹介</a></li>
+    <li><a href="#">教材メニュー</a></li>
+    <li><a href="#">お問い合わせ</a></li>
+  </ul>
+</nav>
+<div id="overlay"></div>
+
+<!-- Hero -->
+<main>
+<section class="hero">
+  <h1>⚡ 電位シミュレーター</h1>
+  <p>点電荷による電位の重ね合わせをリアルタイムで体感する</p>
+</section>
+
+<section class="content">
+  <div class="container">
+
+    <h2>コンテンツ概要</h2>
+    <p>
+      この教材では、複数の点電荷が作る電位の空間分布を2Dカラーマップと断面グラフで同時に可視化します。
+      電荷をドラッグして動かすと、等電位線・電気力線・断面グラフがリアルタイムで変化します。
+      「電気的な高さ（電位）」の重ね合わせを直感的に理解することを目的としています。
+    </p>
+
+    <h2>シミュレーター</h2>
+    <div class="sim-card">
+      <!-- 断面グラフ -->
+      <div id="graph-wrap">
+        <canvas id="graph-canvas"></canvas>
+      </div>
+      <!-- 2Dマップ -->
+      <div id="map-wrap">
+        <canvas id="field-canvas"></canvas>
+        <div id="slice-hint">― 黄線をドラッグ → 断面を移動　　電荷をタップ → 編集</div>
+        <div id="toolbar">
+          <button class="tb-btn on" id="btn-graph" onclick="toggleGraph()" title="断面グラフ">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="1,14 5,8 9,10 13,4 17,6"/></svg>
+          </button>
+          <div class="tb-sep"></div>
+          <button class="tb-btn on" id="btn-heat" onclick="toggleLayer('heatmap')" title="カラーマップ">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><circle cx="9" cy="9" r="4"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button class="tb-btn on" id="btn-equip" onclick="toggleLayer('equipot')" title="等電位線">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M2,9 Q5,4 9,9 Q13,14 16,9"/>
+              <path d="M2,6 Q5,1 9,6 Q13,11 16,6" opacity="0.5"/>
+              <path d="M2,12 Q5,7 9,12 Q13,17 16,12" opacity="0.5"/>
+            </svg>
+          </button>
+          <button class="tb-btn on" id="btn-field" onclick="toggleLayer('field')" title="電気力線">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="9" x2="15" y2="9"/><polyline points="11,6 15,9 11,12"/>
+            </svg>
+          </button>
+          <div class="tb-sep"></div>
+          <button class="tb-btn" onclick="resetCharges()" title="リセット">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M3,9 A6,6 0 1,1 6,14"/><polyline points="3,14 3,9 8,9"/>
+            </svg>
+          </button>
+        </div>
+        <div id="popup">
+          <div id="popup-title">電荷を編集</div>
+          <div id="pop-sign-row">
+            <button class="sign-btn" id="sign-pos" onclick="setPopSign(1)">＋ 正</button>
+            <button class="sign-btn" id="sign-neg" onclick="setPopSign(-1)">－ 負</button>
+          </div>
+          <div id="pop-mag-label"><span>大きさ</span><span id="pop-mag-val">1.0</span></div>
+          <input type="range" id="pop-mag" min="0.2" max="3" step="0.1" value="1" oninput="setPopMag(this.value)">
+          <button id="popup-close" onclick="closePopup()">閉じる</button>
+        </div>
+      </div>
+    </div>
+
+    <h2>操作方法</h2>
+    <p>
+      <span class="usage-tag">ドラッグ</span>電荷を自由に移動<br>
+      <span class="usage-tag">タップ／クリック</span>電荷の符号・大きさを編集<br>
+      <span class="usage-tag">黄線ドラッグ</span>断面の高さを変更して断面グラフを更新<br>
+      <span class="usage-tag">ツールバー</span>断面グラフ・カラーマップ・等電位線・電気力線の表示切替
+    </p>
+
+    <h2>学習のポイント</h2>
+    <ol>
+      <li>正電荷（＋）の周囲は赤く高い電位、負電荷（－）の周囲は青く低い電位になります。</li>
+      <li>等電位線は「電位の等高線」です。密なほど電場が強い（坂が急）場所です。</li>
+      <li>電気力線は電場の向きを示し、等電位線と常に直交します。</li>
+      <li>断面グラフの黄線を電荷の高さに合わせると、山（正）と谷（負）が鮮明に見えます。</li>
+    </ol>
+
+  </div>
+</section>
+</main>
+
+<!-- フッター -->
+<footer>
+  <p>&copy; 2025 AyukiLab</p>
+  <a href="#">免責事項</a>
+  <a href="#">プライバシーポリシー</a>
+  <a href="#">お問い合わせ</a>
+  <p>Twitter・Instagram：準備中</p>
+</footer>
+
+<script>
+const charges=[{x:0.35,y:0.5,q:1},{x:0.65,y:0.5,q:-1}];
+const layers={heatmap:true,equipot:true,field:true};
+let showGraph=true,sliceY=0.5;
+let draggingCharge=null,dragOX=0,dragOY=0,draggingSlice=false;
+let popupIdx=-1,mapW=0,mapH=0,imgData=null;
+let pointerMoved=false,pointerDownPos={x:0,y:0},pointerDownIdx=-1;
+const CPOS=['#D85A30','#E89030','#639922'];
+const CNEG=['#378ADD','#D4537E','#7F77DD'];
+const fcanvas=document.getElementById('field-canvas');
+const fctx=fcanvas.getContext('2d');
+const gcanvas=document.getElementById('graph-canvas');
+const gctx=gcanvas.getContext('2d');
+
+function resize(){
+  const wrap=document.getElementById('map-wrap');
+  mapW=wrap.clientWidth;
+  mapH=Math.max(200,Math.round(mapW*0.55));
+  fcanvas.width=mapW;fcanvas.height=mapH;fcanvas.style.height=mapH+'px';
+  gcanvas.width=gcanvas.offsetWidth||600;gcanvas.height=140;
+  imgData=null;draw();
+}
+
+function V(px,py){
+  let v=0;
+  for(const ch of charges){const dx=px-ch.x*mapW,dy=py-ch.y*mapH,r=Math.sqrt(dx*dx+dy*dy);if(r<2)continue;v+=ch.q*40/r;}
+  return v;
+}
+
+function heatColor(v){
+  const t=Math.max(-1,Math.min(1,v/3));
+  if(t>=0)return[Math.round(80+175*t),Math.round(20+30*(1-t)),20];
+  const s=-t;return[10,Math.round(30+50*s),Math.round(80+160*s)];
+}
+
+function drawHeatmap(){
+  if(!imgData||imgData.width!==mapW||imgData.height!==mapH)imgData=fctx.createImageData(mapW,mapH);
+  const d=imgData.data;
+  for(let py=0;py<mapH;py++)for(let px=0;px<mapW;px++){
+    const[r,g,b]=heatColor(V(px,py));const i=(py*mapW+px)*4;d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=225;
+  }
+  fctx.putImageData(imgData,0,0);
+}
+
+function ms(level,col,lw){
+  const step=8;fctx.strokeStyle=col;fctx.lineWidth=lw;fctx.beginPath();
+  for(let py=0;py<mapH-step;py+=step)for(let px=0;px<mapW-step;px+=step){
+    const v00=V(px,py),v10=V(px+step,py),v01=V(px,py+step),v11=V(px+step,py+step);
+    const b=(v00>level?8:0)|(v10>level?4:0)|(v11>level?2:0)|(v01>level?1:0);
+    if(b===0||b===15)continue;
+    function lp(a,b2,va,vb){return a+(b2-a)*(level-va)/(vb-va||0.001);}
+    const top=[lp(px,px+step,v00,v10),py],bot=[lp(px,px+step,v01,v11),py+step];
+    const lft=[px,lp(py,py+step,v00,v01)],rgt=[px+step,lp(py,py+step,v10,v11)];
+    const segs=[];
+    if(b===1||b===14)segs.push([lft,bot]);else if(b===2||b===13)segs.push([bot,rgt]);
+    else if(b===3||b===12)segs.push([lft,rgt]);else if(b===4||b===11)segs.push([top,rgt]);
+    else if(b===5)segs.push([lft,top],[bot,rgt]);else if(b===6||b===9)segs.push([top,bot]);
+    else if(b===7||b===8)segs.push([lft,top]);else if(b===10)segs.push([lft,bot],[top,rgt]);
+    for(const[a,bb]of segs){fctx.moveTo(a[0],a[1]);fctx.lineTo(bb[0],bb[1]);}
+  }
+  fctx.stroke();
+}
+
+function drawEquipot(){
+  [-5,-3,-2,-1,-0.5,0.5,1,2,3,5].forEach(lv=>{ms(lv,lv>0?'rgba(255,150,100,0.55)':'rgba(80,150,255,0.55)',1);});
+  ms(0,'rgba(255,255,255,0.65)',1.5);
+}
+
+function Efield(px,py){
+  let ex=0,ey=0;
+  for(const ch of charges){const dx=px-ch.x*mapW,dy=py-ch.y*mapH,r2=dx*dx+dy*dy;if(r2<1)continue;const r=Math.sqrt(r2);ex+=ch.q*dx/(r2*r);ey+=ch.q*dy/(r2*r);}
+  return{ex,ey};
+}
+function drawArrow(x,y,ang,size){
+  fctx.save();fctx.translate(x,y);fctx.rotate(ang);
+  fctx.beginPath();fctx.moveTo(0,0);fctx.lineTo(-size,-size*0.45);fctx.lineTo(-size*0.3,0);fctx.lineTo(-size,size*0.45);fctx.closePath();
+  fctx.fillStyle='rgba(255,255,255,0.78)';fctx.fill();fctx.restore();
+}
+function drawFieldLines(){
+  const SEEDS=20,STEPS=120,DT=3.5,ARROW_EVERY=28,ARROW_SIZE=10,LINE_W=1.8;
+  const seedAngles=[];for(let i=0;i<SEEDS;i++)seedAngles.push((2*Math.PI*i)/SEEDS);
+  charges.filter(ch=>ch.q>0).forEach(ch=>{
+    const r0=18;
+    seedAngles.forEach(ang=>{
+      let px=ch.x*mapW+r0*Math.cos(ang),py=ch.y*mapH+r0*Math.sin(ang);
+      const pts=[[px,py]];
+      for(let s=0;s<STEPS;s++){
+        const{ex,ey}=Efield(px,py);const mag=Math.sqrt(ex*ex+ey*ey);if(mag<1e-6)break;
+        px+=ex/mag*DT;py+=ey/mag*DT;
+        if(px<0||px>mapW||py<0||py>mapH)break;
+        let near=false;for(const c of charges){const dx=px-c.x*mapW,dy=py-c.y*mapH;if(Math.sqrt(dx*dx+dy*dy)<14){near=true;break;}}
+        if(near)break;pts.push([px,py]);
+      }
+      if(pts.length<3)return;
+      fctx.beginPath();fctx.strokeStyle='rgba(255,255,255,0.5)';fctx.lineWidth=LINE_W;
+      fctx.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)fctx.lineTo(pts[i][0],pts[i][1]);fctx.stroke();
+      for(let i=ARROW_EVERY;i<pts.length-1;i+=ARROW_EVERY){
+        const[x0,y0]=pts[i-1],[x1,y1]=pts[i];drawArrow(x1,y1,Math.atan2(y1-y0,x1-x0),ARROW_SIZE);
+      }
+    });
+  });
+}
+
+function drawSlice(){
+  const sy=sliceY*mapH;fctx.save();fctx.setLineDash([6,4]);
+  fctx.strokeStyle='rgba(255,230,40,0.85)';fctx.lineWidth=1.5;
+  fctx.beginPath();fctx.moveTo(0,sy);fctx.lineTo(mapW,sy);fctx.stroke();fctx.restore();
+}
+
+function drawCharges(){
+  let pi=0,ni=0;
+  charges.forEach((ch,i)=>{
+    const col=ch.q>0?CPOS[pi++%CPOS.length]:CNEG[ni++%CNEG.length];
+    const cx=ch.x*mapW,cy=ch.y*mapH;
+    fctx.beginPath();fctx.arc(cx,cy,16,0,Math.PI*2);
+    fctx.fillStyle=ch.q>0?'rgba(250,210,190,0.92)':'rgba(190,215,250,0.92)';fctx.fill();
+    fctx.strokeStyle=i===popupIdx?'#fff':col;fctx.lineWidth=i===popupIdx?2.5:1.5;fctx.stroke();
+    fctx.fillStyle=ch.q>0?'#7a2000':'#0a3a70';
+    fctx.font='bold 14px "Yu Gothic",sans-serif';fctx.textAlign='center';fctx.textBaseline='middle';
+    fctx.fillText(ch.q>0?'+':'−',cx,cy);
+  });
+}
+
+function drawGraph(){
+  const W=gcanvas.width,H=gcanvas.height,pL=42,pR=12,pT=12,pB=26,gW=W-pL-pR,gH=H-pT-pB;
+  const N=500,sy=sliceY*mapH,CLAMP=7;
+  function cl(v){return Math.max(-CLAMP,Math.min(CLAMP,v));}
+  const indiv=charges.map(ch=>{
+    const pts=[];
+    for(let j=0;j<=N;j++){const px=j/N*mapW,dx=px-ch.x*mapW,dy=sy-ch.y*mapH,r=Math.sqrt(dx*dx+dy*dy);pts.push(r<2?ch.q*CLAMP:ch.q*40/r);}
+    return pts;
+  });
+  const total=[];for(let j=0;j<=N;j++)total.push(indiv.reduce((s,c)=>s+c[j],0));
+  const allV=[...total,...indiv.flat()].map(cl);
+  let vMin=Math.min(...allV),vMax=Math.max(...allV);const vp=(vMax-vMin)*0.08||0.5;vMin-=vp;vMax+=vp;
+  function toY(v){return pT+(1-(cl(v)-vMin)/(vMax-vMin))*gH;}
+  function toX(f){return pL+f*gW;}
+  const ax='rgba(139,90,43,0.25)',tx='rgba(139,90,43,0.55)',gr='rgba(248,182,200,0.18)';
+  gctx.clearRect(0,0,W,H);
+  [-6,-3,0,3,6].forEach(v=>{
+    if(v<vMin||v>vMax)return;
+    gctx.strokeStyle=v===0?ax:gr;gctx.lineWidth=v===0?1:0.5;
+    gctx.beginPath();gctx.moveTo(pL,toY(v));gctx.lineTo(pL+gW,toY(v));gctx.stroke();
+    gctx.fillStyle=tx;gctx.font='10px "Yu Gothic",sans-serif';gctx.textAlign='right';
+    gctx.fillText(v>0?'+'+v:v,pL-4,toY(v)+3.5);
+  });
+  gctx.strokeStyle=ax;gctx.lineWidth=1;gctx.beginPath();gctx.moveTo(pL,pT);gctx.lineTo(pL,pT+gH);gctx.stroke();
+  let pi=0,ni=0;
+  charges.forEach((ch,i)=>{
+    const col=ch.q>0?CPOS[pi++%CPOS.length]:CNEG[ni++%CNEG.length];
+    gctx.strokeStyle=col;gctx.lineWidth=1.5;gctx.setLineDash([5,3]);gctx.globalAlpha=0.6;
+    gctx.beginPath();for(let j=0;j<=N;j++){const px=toX(j/N),py=toY(indiv[i][j]);j===0?gctx.moveTo(px,py):gctx.lineTo(px,py);}
+    gctx.stroke();gctx.setLineDash([]);gctx.globalAlpha=1;
+    gctx.strokeStyle=col+'88';gctx.lineWidth=1;gctx.setLineDash([2,3]);
+    gctx.beginPath();gctx.moveTo(toX(ch.x),pT);gctx.lineTo(toX(ch.x),pT+gH);gctx.stroke();gctx.setLineDash([]);
+  });
+  gctx.strokeStyle='#c084a0';gctx.lineWidth=2.5;
+  gctx.beginPath();for(let j=0;j<=N;j++){const px=toX(j/N),py=toY(total[j]);j===0?gctx.moveTo(px,py):gctx.lineTo(px,py);}gctx.stroke();
+  gctx.fillStyle=tx;gctx.font='10px "Yu Gothic",sans-serif';gctx.textAlign='left';gctx.fillText('V(x)',2,pT+gH/2+4);
+  gctx.textAlign='center';gctx.fillText('x →',pL+gW/2,pT+gH+pB-3);
+  let lx=pL+4;
+  const items=[{col:'#c084a0',dash:false,label:'合成電位'}];
+  let pi2=0,ni2=0;charges.forEach((ch,i)=>{items.push({col:ch.q>0?CPOS[pi2++%CPOS.length]:CNEG[ni2++%CNEG.length],dash:true,label:(ch.q>0?'＋':'－')+`電荷${i+1}`});});
+  items.forEach(it=>{
+    gctx.strokeStyle=it.col;gctx.lineWidth=it.dash?1.5:2.5;if(it.dash)gctx.setLineDash([4,2]);
+    gctx.beginPath();gctx.moveTo(lx,pT+gH+14);gctx.lineTo(lx+16,pT+gH+14);gctx.stroke();gctx.setLineDash([]);
+    gctx.fillStyle=tx;gctx.font='10px "Yu Gothic",sans-serif';gctx.textAlign='left';gctx.fillText(it.label,lx+19,pT+gH+17);
+    lx+=gctx.measureText(it.label).width+32;
+  });
+}
+
+function draw(){
+  fctx.clearRect(0,0,mapW,mapH);
+  if(layers.heatmap)drawHeatmap();if(layers.equipot)drawEquipot();if(layers.field)drawFieldLines();
+  drawSlice();drawCharges();if(showGraph)drawGraph();
+}
+
+function toggleGraph(){
+  showGraph=!showGraph;
+  document.getElementById('graph-wrap').classList.toggle('hidden',!showGraph);
+  document.getElementById('btn-graph').classList.toggle('on',showGraph);
+  setTimeout(()=>{gcanvas.width=gcanvas.offsetWidth;draw();},20);
+}
+function toggleLayer(n){
+  layers[n]=!layers[n];
+  const m={heatmap:'btn-heat',equipot:'btn-equip',field:'btn-field'};
+  document.getElementById(m[n]).classList.toggle('on',layers[n]);imgData=null;draw();
+}
+function resetCharges(){
+  closePopup();charges.length=0;charges.push({x:0.35,y:0.5,q:1},{x:0.65,y:0.5,q:-1});imgData=null;draw();
+}
+
+function openPopup(i,cx,cy){
+  popupIdx=i;const ch=charges[i];
+  const popup=document.getElementById('popup');
+  document.getElementById('pop-mag').value=Math.abs(ch.q);
+  document.getElementById('pop-mag-val').textContent=Math.abs(ch.q).toFixed(1);
+  document.getElementById('sign-pos').className='sign-btn'+(ch.q>0?' active-pos':'');
+  document.getElementById('sign-neg').className='sign-btn'+(ch.q<0?' active-neg':'');
+  let px=cx+20,py=cy-30;
+  if(px+170>mapW)px=cx-180;if(py+140>mapH)py=mapH-150;if(py<0)py=6;
+  popup.style.left=px+'px';popup.style.top=py+'px';popup.classList.add('show');draw();
+}
+function closePopup(){popupIdx=-1;document.getElementById('popup').classList.remove('show');draw();}
+function setPopSign(s){
+  if(popupIdx<0)return;charges[popupIdx].q=s*Math.abs(charges[popupIdx].q);
+  document.getElementById('sign-pos').className='sign-btn'+(s>0?' active-pos':'');
+  document.getElementById('sign-neg').className='sign-btn'+(s<0?' active-neg':'');
+  imgData=null;draw();
+}
+function setPopMag(v){
+  if(popupIdx<0)return;const s=charges[popupIdx].q>0?1:-1;charges[popupIdx].q=s*parseFloat(v);
+  document.getElementById('pop-mag-val').textContent=parseFloat(v).toFixed(1);imgData=null;draw();
+}
+
+function getPos(e,touch){
+  const r=fcanvas.getBoundingClientRect(),src=touch?e.touches[0]:e;
+  return{x:(src.clientX-r.left)*(mapW/r.width),y:(src.clientY-r.top)*(mapH/r.height)};
+}
+function findCharge(mx,my){
+  for(let i=charges.length-1;i>=0;i--){const dx=mx-charges[i].x*mapW,dy=my-charges[i].y*mapH;if(Math.sqrt(dx*dx+dy*dy)<22)return i;}return -1;
+}
+
+fcanvas.addEventListener('mousedown',e=>{
+  const{x,y}=getPos(e,false),sy=sliceY*mapH;
+  if(Math.abs(y-sy)<12){draggingSlice=true;return;}
+  const idx=findCharge(x,y);pointerMoved=false;pointerDownPos={x,y};pointerDownIdx=idx;
+  if(idx>=0){draggingCharge=idx;dragOX=x-charges[idx].x*mapW;dragOY=y-charges[idx].y*mapH;}
+});
+fcanvas.addEventListener('mousemove',e=>{
+  const{x,y}=getPos(e,false);
+  if(draggingSlice){sliceY=Math.max(0.02,Math.min(0.98,y/mapH));draw();return;}
+  if(draggingCharge!==null){pointerMoved=true;charges[draggingCharge].x=Math.max(0,Math.min(1,(x-dragOX)/mapW));charges[draggingCharge].y=Math.max(0,Math.min(1,(y-dragOY)/mapH));imgData=null;draw();}
+  const sy=sliceY*mapH;fcanvas.style.cursor=Math.abs(y-sy)<12?'ns-resize':findCharge(x,y)>=0?'pointer':'crosshair';
+});
+fcanvas.addEventListener('mouseup',e=>{
+  const{x,y}=getPos(e,false);draggingSlice=false;
+  if(draggingCharge!==null&&!pointerMoved&&pointerDownIdx>=0)openPopup(pointerDownIdx,x,y);
+  else if(draggingCharge===null&&!pointerMoved)closePopup();
+  draggingCharge=null;
+});
+fcanvas.addEventListener('mouseleave',()=>{draggingCharge=null;draggingSlice=false;});
+
+fcanvas.addEventListener('touchstart',e=>{
+  e.preventDefault();const{x,y}=getPos(e,true),sy=sliceY*mapH;
+  if(Math.abs(y-sy)<18){draggingSlice=true;return;}
+  const idx=findCharge(x,y);pointerMoved=false;pointerDownPos={x,y};pointerDownIdx=idx;
+  if(idx>=0){draggingCharge=idx;dragOX=x-charges[idx].x*mapW;dragOY=y-charges[idx].y*mapH;}
+},{passive:false});
+fcanvas.addEventListener('touchmove',e=>{
+  e.preventDefault();const{x,y}=getPos(e,true);
+  if(draggingSlice){sliceY=Math.max(0.02,Math.min(0.98,y/mapH));draw();return;}
+  if(draggingCharge!==null){const d=Math.sqrt((x-pointerDownPos.x)**2+(y-pointerDownPos.y)**2);if(d>6)pointerMoved=true;charges[draggingCharge].x=Math.max(0,Math.min(1,(x-dragOX)/mapW));charges[draggingCharge].y=Math.max(0,Math.min(1,(y-dragOY)/mapH));imgData=null;draw();}
+},{passive:false});
+fcanvas.addEventListener('touchend',e=>{
+  e.preventDefault();draggingSlice=false;
+  if(draggingCharge!==null&&!pointerMoved&&pointerDownIdx>=0){const t=e.changedTouches[0],r=fcanvas.getBoundingClientRect();openPopup(pointerDownIdx,(t.clientX-r.left)*(mapW/r.width),(t.clientY-r.top)*(mapH/r.height));}
+  draggingCharge=null;
+},{passive:false});
+
+document.addEventListener('mousedown',e=>{
+  const popup=document.getElementById('popup');
+  if(popup.classList.contains('show')&&!popup.contains(e.target)&&e.target!==fcanvas)closePopup();
+});
+
+// ハンバーガーメニュー
+const toggle=document.getElementById('menu-toggle');
+const navMenu=document.getElementById('nav-menu');
+const overlay=document.getElementById('overlay');
+function toggleMenu(){toggle.classList.toggle('active');navMenu.classList.toggle('active');overlay.classList.toggle('active');}
+toggle.addEventListener('click',toggleMenu);
+overlay.addEventListener('click',toggleMenu);
+
+window.addEventListener('resize',()=>{imgData=null;setTimeout(resize,50);});
+resize();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>熱と温度の違い - AyukiLab</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTK7617PZG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTK7617PZG');
+  </script>
+  <link rel="canonical" href="https://www.ayukilab.jp/kyozai/k_0005.html">
+</head>
+<body>
+
+<header>
+  <div class="logo"><a href="../index.html">Ayuki Lab</a></div>
+  <nav class="pc-nav">
+    <ul>
+      <li><a href="../index.html">ホーム</a></li>
+      <li><a href="../about.html">サイト紹介</a></li>
+      <li><a href="../menu.html">教材メニュー</a></li>
+      <li><a href="../contact.html">お問い合わせ</a></li>
+    </ul>
+  </nav>
+  <div class="menu-toggle" id="menu-toggle"><span></span><span></span><span></span></div>
+</header>
+
+<nav id="nav-menu">
+  <ul>
+    <li><a href="../index.html">ホーム</a></li>
+    <li><a href="../about.html">サイト紹介</a></li>
+    <li><a href="../menu.html">教材メニュー</a></li>
+    <li><a href="../contact.html">お問い合わせ</a></li>
+  </ul>
+</nav>
+<div id="overlay"></div>
+
+<main>
+  <section class="hero">
+    <h1>熱と温度の違い</h1>
+    <p>似ているようで異なる「熱」と「温度」を視覚的に理解する教材</p>
+  </section>
+
+  <section class="content">
+    <div class="container">
+
+      <h2>コンテンツ概要</h2>
+      <p>
+        この教材では、物理の熱分野で重要な「熱」と「温度」の違いを視覚的に理解できるように設計しています。
+        温度は粒子の平均運動エネルギーを表す量であり、熱はエネルギーの移動そのものを指します。
+        Unity を用いて、粒子の運動の違いやエネルギー移動の様子をアニメーションとして示すことで、
+        2 つの概念の違いを直感的に捉えることができます。
+      </p>
+
+      <h2>デモ</h2>
+      <div class="unity-demo">
+        <iframe src="./kfile/0005/index.html" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
+      </div>
+
+      <h2>使い方</h2>
+      <ol>
+        <li>温度の異なる粒子の動きを比較し、運動の激しさの違いを観察してください。</li>
+        <li>熱が移動する場面では、粒子の運動がどのように変化するかを確認してください。</li>
+        <li>「熱＝エネルギーの移動」「温度＝粒子の運動の平均」という違いを意識しながら学習してください。</li>
+        <li>UI や動作に不具合がありましたら、お問い合わせページよりご連絡ください。</li>
+      </ol>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 AyukiLab</p>
+  <a href="../policy.html">免責事項</a>
+  <a href="../privacy.html">プライバシーポリシー</a>
+  <a href="../contact.html">お問い合わせ</a>
+  <p>Twitter・Instagram：準備中</p>
+</footer>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  const overlay = document.getElementById('overlay');
+  function toggleMenu() {
+    toggle.classList.toggle('active');
+    navMenu.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+  toggle.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ドップラー効果（観測者が動く場合） - AyukiLab</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTK7617PZG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTK7617PZG');
+  </script>
+  <link rel="canonical" href="https://www.ayukilab.jp/kyozai/k_0003.html">
+</head>
+<body>
+
+  <!-- ▼ ヘッダー -->
+  <header>
+    <div class="logo"><a href="../index.html">Ayuki Lab</a></div>
+    <nav class="pc-nav">
+      <ul>
+        <li><a href="../index.html">ホーム</a></li>
+        <li><a href="../about.html">サイト紹介</a></li>
+        <li><a href="../menu.html">教材メニュー</a></li>
+        <li><a href="../contact.html">お問い合わせ</a></li>
+      </ul>
+    </nav>
+    <div class="menu-toggle" id="menu-toggle">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- ▼ モバイルメニュー -->
+  <nav id="nav-menu">
+    <ul>
+      <li><a href="../index.html">ホーム</a></li>
+      <li><a href="../about.html">サイト紹介</a></li>
+      <li><a href="../menu.html">教材メニュー</a></li>
+      <li><a href="../contact.html">お問い合わせ</a></li>
+    </ul>
+  </nav>
+  <div id="overlay"></div>
+
+  <!-- ▼ メイン -->
+  <main>
+    <section class="hero">
+      <h1>ドップラー効果（観測者が動く場合）</h1>
+      <p>踏切や静止した音源に近づく・遠ざかる観測者が聞く音の変化を可視化</p>
+    </section>
+
+    <section class="content">
+      <div class="container">
+        <h2>コンテンツ概要</h2>
+        <p>
+          この教材では、Unity を用いて「観測者が動く場合のドップラー効果」を視覚的に表現しています。
+          踏切の警報機のように静止している音源に対して、観測者が近づいたり遠ざかったりするとき、
+          観測者が聞く音の高さ（周波数）がどのように変化するかを、波面の間隔や到達の様子とともに確認できます。
+          日常場面と結びつけながら、ドップラー効果の理解を深めることをねらいとしています。
+        </p>
+
+        <h2>デモ</h2>
+        <div class="unity-demo">
+          <iframe
+            src="./kfile/0003/index.html"
+            width="100%"
+            height="600"
+            frameborder="0"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <h2>使い方</h2>
+        <ol>
+          <li>画面の指示に従って、観測者の位置や速度を変更するボタン・スライダーを操作してください。</li>
+          <li>観測者が音源に近づく場合と遠ざかる場合で、波面の間隔や観測者に到達するタイミングがどのように変化するかを比較してください。</li>
+          <li>踏切などの身近な状況をイメージしながら、「聞こえる音の高さ」と「波の様子」の関係を考察してみてください。</li>
+          <li>UI や動作に不具合がありましたら、お問い合わせページよりご連絡をお願いします。</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <!-- ▼ フッター -->
+  <footer>
+    <p>&copy; 2025 AyukiLab</p>
+    <a href="../policy.html">免責事項</a>
+    <a href="../privacy.html">プライバシーポリシー</a>
+    <a href="../contact.html">お問い合わせ</a>
+    <p>Twitter・Instagram：準備中</p>
+  </footer>
+
+  <!-- ▼ スクリプト -->
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const overlay = document.getElementById('overlay');
+
+    function toggleMenu() {
+      toggle.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    toggle.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+  </script>
+
+</body>
+</html>

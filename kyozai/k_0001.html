@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unity教材紹介 - AyukiLab</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTK7617PZG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTK7617PZG');
+  </script>
+  <link rel="canonical" href="https://www.ayukilab.jp/kyozai/k_0001.html">
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <div class="logo">Ayuki Lab</div>
+    <nav class="pc-nav">
+      <ul>
+        <li><a href="../index.html">ホーム</a></li>
+        <li><a href="#">サイト紹介</a></li>
+        <li><a href="#">教材メニュー</a></li>
+        <li><a href="#">お問い合わせ</a></li>
+      </ul>
+    </nav>
+    <div class="menu-toggle" id="menu-toggle">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <!-- モバイルメニュー -->
+  <nav id="nav-menu">
+    <ul>
+      <li><a href="index.html">ホーム</a></li>
+      <li><a href="#">サイト紹介</a></li>
+      <li><a href="#">教材メニュー</a></li>
+      <li><a href="#">お問い合わせ</a></li>
+    </ul>
+  </nav>
+  <div id="overlay"></div>
+
+  <!-- メイン -->
+  <main>
+    <section class="hero">
+      <h1>ウインドミル(円運動と単振動)</h1>
+      <p>動的に見た円運動と単振動の様子</p>
+    </section>
+
+    <section class="content">
+      <div class="container">
+        <h2>コンテンツ概要</h2>
+        <p>この教材では、Unityを用いて学習内容で可視できない単振動をわかりやすく表現しています。</p>
+
+        <h2>デモ</h2>
+        <div class="unity-demo">
+          <iframe src="./kfile/0001/index.html" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
+        </div>
+
+        <h2>使い方</h2>
+        <ol>
+          <li>画面の表示に従ってボタンを押してください。</li>
+          <li>ボタンの操作によって波の出方などが変化します。</li>
+          <li>UIに問題がありましたらご連絡お願いします。</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <!-- フッター -->
+  <footer>
+    <p>&copy; 2025 AyukiLab</p>
+    <a href="#">免責事項</a>
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">お問い合わせ</a>
+    <p>Twitter・Instagram：準備中</p>
+  </footer>
+
+  <!-- スクリプト -->
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const overlay = document.getElementById('overlay');
+
+    function toggleMenu() {
+      toggle.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    toggle.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+  </script>
+
+</body>
+</html>

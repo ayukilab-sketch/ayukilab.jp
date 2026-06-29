@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CORE マスコットキャラ AR - AyukiLab</title>
+  <link rel="stylesheet" href="../style.css" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTK7617PZG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTK7617PZG');
+  </script>
+  <link rel="canonical" href="https://www.ayukilab.jp/kyozai/k_0006.html">
+</head>
+<body>
+
+<header>
+  <div class="logo"><a href="../index.html">Ayuki Lab</a></div>
+  <nav class="pc-nav">
+    <ul>
+      <li><a href="../index.html">ホーム</a></li>
+      <li><a href="../about.html">サイト紹介</a></li>
+      <li><a href="../menu.html">教材メニュー</a></li>
+      <li><a href="../contact.html">お問い合わせ</a></li>
+    </ul>
+  </nav>
+  <div class="menu-toggle" id="menu-toggle"><span></span><span></span><span></span></div>
+</header>
+
+<nav id="nav-menu">
+  <ul>
+    <li><a href="../index.html">ホーム</a></li>
+    <li><a href="../about.html">サイト紹介</a></li>
+    <li><a href="../menu.html">教材メニュー</a></li>
+    <li><a href="../contact.html">お問い合わせ</a></li>
+  </ul>
+</nav>
+<div id="overlay"></div>
+
+<main>
+  <section class="hero">
+    <h1>CORE マスコットキャラクター AR</h1>
+    <p>愛知教育大学 天文愛好会 CORE のマスコットを AR 化</p>
+  </section>
+
+  <section class="content">
+    <div class="container" style="text-align:center;">
+      <img src="../image/hiro.jpg" alt="COREマスコット画像" style="max-width: 600px; width: 100%; border-radius: 12px; margin-bottom: 30px;">
+    </div>
+  </section>
+
+  <section class="content">
+    <div class="container">
+
+      <h2>コンテンツ概要</h2>
+      <p>
+        この教材は、愛知教育大学の天文愛好会「CORE」のマスコットキャラクターを AR（拡張現実）として表示する試作品です。
+        スマートフォンやタブレットを通して、キャラクターを現実空間に投影し、自由な角度から観察できます。
+        物理分野とは直接関係しませんが、AR 技術の活用例として制作したコンテンツです。
+      </p>
+
+      <h2>デモ</h2>
+      <div class="unity-demo">
+        <iframe src="./kfile/0006/index.html" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
+      </div>
+
+      <h2>使い方</h2>
+      <ol>
+        <li>本教材は試作段階のため、使用方法は後日追記予定です。</li>
+        <li>AR 表示が可能な端末でご覧ください。</li>
+        <li>動作に不具合がありましたら、お問い合わせページよりご連絡ください。</li>
+      </ol>
+
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2025 AyukiLab</p>
+  <a href="../policy.html">免責事項</a>
+  <a href="../privacy.html">プライバシーポリシー</a>
+  <a href="../contact.html">お問い合わせ</a>
+  <p>Twitter・Instagram：準備中</p>
+</footer>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const navMenu = document.getElementById('nav-menu');
+  const overlay = document.getElementById('overlay');
+  function toggleMenu() {
+    toggle.classList.toggle('active');
+    navMenu.classList.toggle('active');
+    overlay.classList.toggle('active');
+  }
+  toggle.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', toggleMenu);
+</script>
+
+</body>
+</html>
