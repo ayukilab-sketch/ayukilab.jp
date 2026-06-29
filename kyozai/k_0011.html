@@ -10,17 +10,25 @@
   <link rel="icon" type="image/png" sizes="16x16" href="../image/favicon-16.png">
   <link rel="shortcut icon" href="../image/favicon.png">
   <link rel="apple-touch-icon" href="../image/apple-touch-icon.png">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTK7617PZG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTK7617PZG');
+  </script>
   <style>
 /* シミュレーター固有スタイル */
 .sim-card {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(248,182,200,0.45);
+  box-shadow: 0 4px 16px rgba(77,208,225,0.35);
   overflow: hidden;
   padding: 16px;
 }
 #graph-wrap {
-  border: 1px solid #f8b6c8;
+  border: 1px solid #4dd0e1;
   border-radius: 10px;
   background: #fff;
   padding: 10px 12px;
@@ -30,7 +38,7 @@
 #graph-wrap.hidden { display: none; }
 #graph-canvas { display:block; width:100%; height:140px; }
 #map-wrap {
-  border: 1px solid #f8b6c8;
+  border: 1px solid #4dd0e1;
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -54,7 +62,7 @@
   color:rgba(255,255,255,0.55); transition:background 0.15s,color 0.15s;
 }
 .tb-btn:hover { background:rgba(255,255,255,0.1); color:#fff; }
-.tb-btn.on { background:rgba(248,182,200,0.28); color:#f8b6c8; }
+.tb-btn.on { background:rgba(77,208,225,0.28); color:#4dd0e1; }
 .tb-sep { width:0.5px; height:18px; background:rgba(255,255,255,0.15); margin:0 2px; }
 #slice-hint {
   position:absolute; top:8px; left:10px;
@@ -64,7 +72,7 @@
 #popup {
   display:none; position:absolute;
   background:rgba(18,10,14,0.96);
-  border:0.5px solid rgba(248,182,200,0.3);
+  border:0.5px solid rgba(77,208,225,0.3);
   border-radius:14px; padding:12px 14px;
   color:#fff; z-index:20; min-width:164px;
   box-shadow:0 8px 32px rgba(0,0,0,0.4);
@@ -82,7 +90,7 @@
 .sign-btn.active-pos { background:rgba(216,90,48,0.35); color:#ffaa80; border-color:#D85A30; }
 .sign-btn.active-neg { background:rgba(55,138,221,0.35); color:#80c0ff; border-color:#378ADD; }
 #pop-mag-label { font-size:11px; color:rgba(255,255,255,0.4); display:flex; justify-content:space-between; margin-bottom:4px; }
-#pop-mag { width:100%; accent-color:#f8b6c8; }
+#pop-mag { width:100%; accent-color:#4dd0e1; }
 #popup-close {
   margin-top:10px; width:100%; padding:5px;
   border-radius:8px; border:0.5px solid rgba(255,255,255,0.15);
@@ -93,8 +101,8 @@
 #popup-close:hover { background:rgba(255,255,255,0.08); color:#fff; }
 .usage-tag {
   display: inline-block;
-  background: #f8b6c8;
-  color: #8b5a2b;
+  background: #4dd0e1;
+  color: #004d6e;
   border-radius: 20px;
   font-size: 13px;
   padding: 3px 12px;
@@ -103,26 +111,24 @@
 }
 .container h2 {
   font-size: 22px;
-  color: #8b5a2b;
-  border-left: 5px solid #f8b6c8;
+  color: #004d6e;
+  border-left: 5px solid #4dd0e1;
   padding-left: 12px;
   margin: 36px 0 14px;
 }
-.container p, .container li { font-size:15px; line-height:1.8; color:#4a3b2a; }
+.container p, .container li { font-size:15px; line-height:1.8; color:#1a3a4a; }
 .container ol { padding-left:20px; }
   </style>
 </head>
 <body>
 
-<!-- ヘッダー -->
 <header>
   <div class="logo"><a href="../index.html">Ayuki Lab</a></div>
   <nav class="pc-nav">
     <ul>
       <li><a href="../index.html">ホーム</a></li>
-      <li><a href="#">サイト紹介</a></li>
-      <li><a href="#">教材メニュー</a></li>
-      <li><a href="#">お問い合わせ</a></li>
+      <li><a href="../index.html">教材メニュー</a></li>
+      <li><a href="../contact.html">お問い合わせ</a></li>
     </ul>
   </nav>
   <div class="menu-toggle" id="menu-toggle">
@@ -130,18 +136,15 @@
   </div>
 </header>
 
-<!-- モバイルメニュー -->
 <nav id="nav-menu">
   <ul>
     <li><a href="../index.html">ホーム</a></li>
-    <li><a href="#">サイト紹介</a></li>
-    <li><a href="#">教材メニュー</a></li>
-    <li><a href="#">お問い合わせ</a></li>
+    <li><a href="../index.html">教材メニュー</a></li>
+    <li><a href="../contact.html">お問い合わせ</a></li>
   </ul>
 </nav>
 <div id="overlay"></div>
 
-<!-- Hero -->
 <main>
 <section class="hero">
   <h1>⚡ 電位シミュレーター</h1>
@@ -160,11 +163,9 @@
 
     <h2>シミュレーター</h2>
     <div class="sim-card">
-      <!-- 断面グラフ -->
       <div id="graph-wrap">
         <canvas id="graph-canvas"></canvas>
       </div>
-      <!-- 2Dマップ -->
       <div id="map-wrap">
         <canvas id="field-canvas"></canvas>
         <div id="slice-hint">― 黄線をドラッグ → 断面を移動　　電荷をタップ → 編集</div>
@@ -228,13 +229,10 @@
 </section>
 </main>
 
-<!-- フッター -->
 <footer>
-  <p>&copy; 2025 AyukiLab</p>
-  <a href="#">免責事項</a>
-  <a href="#">プライバシーポリシー</a>
-  <a href="#">お問い合わせ</a>
-  <p>Twitter・Instagram：準備中</p>
+  <p>&copy; 2026 AyukiLab</p>
+  <a href="../privacy_policy.html">プライバシーポリシー</a>
+  <a href="../contact.html">お問い合わせ</a>
 </footer>
 
 <script>
@@ -374,7 +372,7 @@ function drawGraph(){
   let vMin=Math.min(...allV),vMax=Math.max(...allV);const vp=(vMax-vMin)*0.08||0.5;vMin-=vp;vMax+=vp;
   function toY(v){return pT+(1-(cl(v)-vMin)/(vMax-vMin))*gH;}
   function toX(f){return pL+f*gW;}
-  const ax='rgba(139,90,43,0.25)',tx='rgba(139,90,43,0.55)',gr='rgba(248,182,200,0.18)';
+  const ax='rgba(0,77,110,0.25)',tx='rgba(0,77,110,0.55)',gr='rgba(77,208,225,0.18)';
   gctx.clearRect(0,0,W,H);
   [-6,-3,0,3,6].forEach(v=>{
     if(v<vMin||v>vMax)return;
@@ -393,12 +391,12 @@ function drawGraph(){
     gctx.strokeStyle=col+'88';gctx.lineWidth=1;gctx.setLineDash([2,3]);
     gctx.beginPath();gctx.moveTo(toX(ch.x),pT);gctx.lineTo(toX(ch.x),pT+gH);gctx.stroke();gctx.setLineDash([]);
   });
-  gctx.strokeStyle='#c084a0';gctx.lineWidth=2.5;
+  gctx.strokeStyle='#0097a7';gctx.lineWidth=2.5;
   gctx.beginPath();for(let j=0;j<=N;j++){const px=toX(j/N),py=toY(total[j]);j===0?gctx.moveTo(px,py):gctx.lineTo(px,py);}gctx.stroke();
   gctx.fillStyle=tx;gctx.font='10px "Yu Gothic",sans-serif';gctx.textAlign='left';gctx.fillText('V(x)',2,pT+gH/2+4);
   gctx.textAlign='center';gctx.fillText('x →',pL+gW/2,pT+gH+pB-3);
   let lx=pL+4;
-  const items=[{col:'#c084a0',dash:false,label:'合成電位'}];
+  const items=[{col:'#0097a7',dash:false,label:'合成電位'}];
   let pi2=0,ni2=0;charges.forEach((ch,i)=>{items.push({col:ch.q>0?CPOS[pi2++%CPOS.length]:CNEG[ni2++%CNEG.length],dash:true,label:(ch.q>0?'＋':'－')+`電荷${i+1}`});});
   items.forEach(it=>{
     gctx.strokeStyle=it.col;gctx.lineWidth=it.dash?1.5:2.5;if(it.dash)gctx.setLineDash([4,2]);
@@ -502,7 +500,6 @@ document.addEventListener('mousedown',e=>{
   if(popup.classList.contains('show')&&!popup.contains(e.target)&&e.target!==fcanvas)closePopup();
 });
 
-// ハンバーガーメニュー
 const toggle=document.getElementById('menu-toggle');
 const navMenu=document.getElementById('nav-menu');
 const overlay=document.getElementById('overlay');
