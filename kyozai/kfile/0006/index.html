@@ -1,0 +1,31 @@
+<!doctype HTML>
+<html>
+<head>
+    <script src="https://aframe.io/releases/0.8.2/aframe.min.js"></script>
+    <!-- AR.js ライブラリの読み込み -->
+    <script src="AR.js-master/aframe/build/aframe-ar.js"></script>
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8662635334386128"
+    crossorigin="anonymous">
+    </script>
+
+    <link rel=”canonical” href=”https://ayukilab.jp/kfile/k_0005.html” />
+
+</head>
+<!-- A-Frame ライブラリの読み込み -->
+<body style='margin : 0px; overflow: hidden;'>
+    <a-scene embedded arjs="debugUIEnabled:false;trackingMethod:best;" vr-mode-ui="enabled: false">
+        <a-assets>
+            <a-asset-item id="shisocchi-obj" src="model_obj/shisocchi/shisocchi.obj"></a-asset-item>
+            <a-asset-item id="shisocchi-mtl" src="model_obj/shisocchi/shisocchi.mtl"></a-asset-item>
+        </a-assets>
+        <a-marker preset="pattern" url="../marker/pattern-core.patt">
+            <a-obj-model id="shisocchi" src="#shisocchi-obj" mtl="#shisocchi-mtl" position="0 0.5 0" scale="0.5 0.5 0.5" rotation="0 0 0"></a-obj-model>
+            <a-text value="CORE" position="0 1 0" align="center" color="black" width="10"></a-text>
+        </a-marker>
+
+
+        <a-entity camera></a-entity>
+    </a-scene>
+    </body>
+</html>

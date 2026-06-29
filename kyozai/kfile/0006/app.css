@@ -1,0 +1,8 @@
+.app {
+    position: center;
+    margin: 0px 200px 0px 200px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items:center;
+}
