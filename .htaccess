@@ -1,0 +1,61 @@
+# 文字コードと言語設定
+AddDefaultCharset UTF-8
+AddLanguage ja .ja
+
+# Brotli 圧縮ファイルの対応（Unity WebGL用）
+<IfModule mod_mime.c>
+  AddEncoding br .br
+  AddType application/javascript .js.br
+  AddType application/wasm .wasm.br
+  AddType application/octet-stream .data.br
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.js\.br$">
+    Header set Content-Encoding br
+    Header set Content-Type application/javascript
+  </FilesMatch>
+  <FilesMatch "\.wasm\.br$">
+    Header set Content-Encoding br
+    Header set Content-Type application/wasm
+  </FilesMatch>
+  <FilesMatch "\.data\.br$">
+    Header set Content-Encoding br
+    Header set Content-Type application/octet-stream
+  </FilesMatch>
+</IfModule>
+
+# Gzip 圧縮ファイルの対応（代替用）
+<IfModule mod_mime.c>
+  AddEncoding gzip .gz
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.js\.gz$">
+    Header set Content-Encoding gzip
+    Header set Content-Type application/javascript
+  </FilesMatch>
+  <FilesMatch "\.wasm\.gz$">
+    Header set Content-Encoding gzip
+    Header set Content-Type application/wasm
+  </FilesMatch>
+  <FilesMatch "\.data\.gz$">
+    Header set Content-Encoding gzip
+    Header set Content-Type application/octet-stream
+  </FilesMatch>
+</IfModule>
+
+# キャッシュ制御（任意）
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+  ExpiresByType application/wasm "access plus 1 week"
+  ExpiresByType image/png "access plus 1 month"
+</IfModule>
+
+# ファイルアクセス制限（任意）
+<FilesMatch "^\.">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
