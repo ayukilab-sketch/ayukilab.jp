@@ -4,7 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ブラウン運動（インク粒子の軌跡） - AyukiLab</title>
+  <meta name="description" content="インク粒子の軌跡から、ブラウン運動とランダムウォークの広がりを可視化する物理教材。AyukiLab提供。" />
   <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../image/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../image/favicon-16.png">
+  <link rel="shortcut icon" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/apple-touch-icon.png">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTK7617PZG"></script>
   <script>
@@ -22,7 +27,7 @@
     <nav class="pc-nav">
       <ul>
         <li><a href="../index.html">ホーム</a></li>
-        <li><a href="../index.html">教材メニュー</a></li>
+        <li><a href="../index.html#content-gallery">教材メニュー</a></li>
         <li><a href="../contact.html">お問い合わせ</a></li>
       </ul>
     </nav>
@@ -32,7 +37,7 @@
   <nav id="nav-menu">
     <ul>
       <li><a href="../index.html">ホーム</a></li>
-      <li><a href="../index.html">教材メニュー</a></li>
+      <li><a href="../index.html#content-gallery">教材メニュー</a></li>
       <li><a href="../contact.html">お問い合わせ</a></li>
     </ul>
   </nav>
@@ -40,8 +45,8 @@
 
   <main>
     <section class="hero">
-      <h1>交流電源と RLC 回路の電圧・電流</h1>
-      <p>電流・電圧の位相差を円運動で視覚的に理解する教材</p>
+      <h1>ブラウン運動（インク粒子の軌跡）</h1>
+      <p>ランダム運動と軌跡の広がりを可視化する教材</p>
     </section>
 
     <section class="content">
@@ -49,23 +54,21 @@
 
         <h2>コンテンツ概要</h2>
         <p>
-          この教材では、交流電源につながれた抵抗（R）、コンデンサー（C）、コイル（L）に流れる電流と電圧の関係を、
-          円運動を用いて視覚的に理解できるようにしています。
-          RLC 回路では、電圧と電流の位相が異なるため、単純な波形だけでは理解が難しい場面があります。
-          本教材では、円運動の角度と波形を対応させることで、位相差の意味を直感的に捉えることができます。
+          この教材では、水中に落としたインク粒子が水分子との衝突によって不規則に動く「ブラウン運動」を、
+          Unity を用いて視覚的に再現しています。
+          粒子一つひとつの軌跡を描画することで、ランダムウォークがどのように広がっていくのかを直感的に観察できます。
         </p>
 
         <h2>デモ</h2>
         <div class="unity-demo">
-          <iframe src="./kfile/0010/index.html" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
+          <iframe src="./kfile/0004/index.html" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
         </div>
 
         <h2>使い方</h2>
         <ol>
-          <li>R・L・C のそれぞれにおける電圧と電流の関係を切り替えて観察してください。</li>
-          <li>円運動の角度と波形の対応を確認し、位相差の意味を理解してください。</li>
-          <li>電源周波数や回路定数を変化させたときの違いも比較できます。</li>
-          <li>UI や動作に不具合がありましたら、お問い合わせページよりご連絡ください。</li>
+          <li>画面の表示に従ってボタンを操作し、粒子の動きを再生してください。</li>
+          <li>粒子の軌跡が時間とともにどのように広がっていくかを観察してください。</li>
+          <li>UI に問題がありましたらご連絡お願いします。</li>
         </ol>
 
       </div>
