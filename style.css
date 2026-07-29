@@ -216,6 +216,56 @@ header {
 }
 
 /* ------------------------------------
+   分野別カテゴリーセクション（教材ギャラリー）
+------------------------------------ */
+.category-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+.category-heading {
+  font-size: 22px;
+  color: #004d6e;
+  border-left: 5px solid #4dd0e1;
+  padding-left: 12px;
+  margin: 48px 0 0;
+}
+
+.category-section:first-of-type .category-heading {
+  margin-top: 40px;
+}
+
+.category-empty {
+  color: #0097a7;
+  font-size: 14px;
+  padding: 20px 15px 40px;
+}
+
+/* ------------------------------------
+   「もっと見る」リンク
+------------------------------------ */
+.more-link {
+  text-align: center;
+  margin: -10px 0 50px;
+}
+
+.more-link a {
+  display: inline-block;
+  color: #004d6e;
+  font-weight: bold;
+  text-decoration: none;
+  border-bottom: 2px solid #4dd0e1;
+  padding-bottom: 2px;
+  transition: 0.3s;
+}
+
+.more-link a:hover {
+  color: #ff7043;
+  border-bottom-color: #ff7043;
+}
+
+/* ------------------------------------
    Unity iframe
 ------------------------------------ */
 .unity-demo iframe {
