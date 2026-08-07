@@ -5,4 +5,4 @@
 // 詳しくは「動画アップロード機能_セットアップ手順.md」を参照してください。
 // ------------------------------------------------------------
 
-window.SUBMIT_ENDPOINT = "";
+window.SUBMIT_ENDPOINT = "https://script.google.com/macros/s/AKfycbxdjUS5wRIlyz3Gmf4Fc9783uk7VxMgQXw12T0EbQOSl3GhZBvZr5uz31fHzvpztlU/exec";
