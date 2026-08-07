@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ファイル一時保管庫（管理者専用） - AyukiLab</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../image/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../image/favicon-16.png">
+  <link rel="shortcut icon" href="../image/favicon.png">
+  <link rel="apple-touch-icon" href="../image/apple-touch-icon.png">
+
+  <style>
+    .upload-container {
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 15px;
+    }
+    .upload-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(77, 208, 225, 0.35);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .upload-box h2 {
+      color: #004d6e;
+      font-size: 18px;
+      margin-top: 0;
+    }
+    #signed-out-view, #signed-in-view {
+      display: none;
+    }
+    .signin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #004d6e;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .signin-btn:hover { background: #ff7043; }
+    .user-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #0097a7;
+    }
+    .user-bar button {
+      background: none;
+      border: 1px solid #4dd0e1;
+      color: #004d6e;
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .user-bar button:hover { background: #e0f7fa; }
+    .drop-zone {
+      border: 2px dashed #4dd0e1;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      color: #0097a7;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .drop-zone.dragover {
+      background: #e0f7fa;
+      border-color: #ff7043;
+      color: #ff7043;
+    }
+    .drop-zone input { display: none; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e0f7fa;
+      font-size: 14px;
+    }
+    .file-item:last-child { border-bottom: none; }
+    .file-name { color: #004d6e; word-break: break-all; flex: 1; margin-right: 10px; }
+    .file-meta { color: #0097a7; font-size: 12px; white-space: nowrap; }
+    .progress-track {
+      background: #e0f7fa;
+      border-radius: 6px;
+      height: 8px;
+      margin: 6px 0 14px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: #4dd0e1;
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s;
+    }
+    .file-actions a, .file-actions button {
+      font-size: 12px;
+      margin-left: 8px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: #0097a7;
+      text-decoration: underline;
+    }
+    .file-actions button.delete { color: #e05a3a; }
+    .notice {
+      font-size: 13px;
+      color: #0097a7;
+      background: #e0f7fa;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+    .setup-warning {
+      font-size: 13px;
+      color: #b23d00;
+      background: #fff3ea;
+      border: 1px solid #ffcc99;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo"><a href="../index.html">Ayuki Lab</a></div>
+    <nav class="pc-nav">
+      <ul>
+        <li><a href="../index.html">ホーム</a></li>
+        <li><a href="../kyozai/index.html">教材メニュー</a></li>
+        <li><a href="../contact.html">お問い合わせ</a></li>
+      </ul>
+    </nav>
+    <div class="menu-toggle" id="menu-toggle">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <nav id="nav-menu">
+    <ul>
+      <li><a href="../index.html">ホーム</a></li>
+      <li><a href="../kyozai/index.html">教材メニュー</a></li>
+      <li><a href="../contact.html">お問い合わせ</a></li>
+    </ul>
+  </nav>
+  <div id="overlay"></div>
+
+  <main>
+    <section class="hero">
+      <h1>ファイル一時保管庫</h1>
+      <p>管理者専用アップロードスペース（岸上様ご本人のGoogleドライブに保存されます）</p>
+    </section>
+
+    <div class="upload-container">
+
+      <div id="setup-warning" class="setup-warning">
+        Google連携の設定が未完了です。<code>upload/google-config.js</code> にClient IDを入力してください。
+      </div>
+
+      <div id="signed-out-view" class="upload-box">
+        <h2>管理者ログイン</h2>
+        <p class="notice">このページは岸上様専用です。指定のGoogleアカウントでログインした場合のみ、アップロード・閲覧が可能です。ファイルは岸上様ご本人のGoogleドライブ内に保存され、サイト訪問者からは一切見えません。</p>
+        <button id="signin-btn" class="signin-btn">Googleでログイン</button>
+        <p id="auth-error" style="color:#e05a3a; font-size:13px; margin-top:14px;"></p>
+      </div>
+
+      <div id="signed-in-view">
+        <div class="user-bar">
+          <span id="user-email"></span>
+          <button id="signout-btn">ログアウト</button>
+        </div>
+
+        <div class="upload-box">
+          <h2>動画・写真をアップロード</h2>
+          <p class="notice">アップロードしたファイルは岸上様のGoogleドライブ「<span id="folder-name-label"></span>」フォルダに保存されます。一時保存用のため、定期的に不要なファイルを削除してください。</p>
+          <div class="drop-zone" id="drop-zone">
+            <p>ここにファイルをドラッグ＆ドロップ<br>またはクリックして選択</p>
+            <input type="file" id="file-input" accept="video/*,image/*" multiple>
+          </div>
+          <div id="upload-progress-list" style="margin-top:16px;"></div>
+        </div>
+
+        <div class="upload-box">
+          <h2>保存済みファイル</h2>
+          <div id="file-list">
+            <p class="notice">読み込み中…</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 AyukiLab</p>
+    <a href="../privacy_policy.html">プライバシーポリシー</a>
+    <a href="../contact.html">お問い合わせ</a>
+  </footer>
+
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const navMenu = document.getElementById('nav-menu');
+    const overlay = document.getElementById('overlay');
+    function toggleMenu() {
+      toggle.classList.toggle('active');
+      navMenu.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+    toggle.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+  </script>
+
+  <!-- Google連携設定（岸上様がご自身のClient ID等を入力するファイル） -->
+  <script src="./google-config.js"></script>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <script>
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email';
+
+    const setupWarning = document.getElementById('setup-warning');
+    const signedOutView = document.getElementById('signed-out-view');
+    const signedInView = document.getElementById('signed-in-view');
+    const signinBtn = document.getElementById('signin-btn');
+    const signoutBtn = document.getElementById('signout-btn');
+    const authError = document.getElementById('auth-error');
+    const userEmail = document.getElementById('user-email');
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const progressList = document.getElementById('upload-progress-list');
+    const fileList = document.getElementById('file-list');
+    document.getElementById('folder-name-label').textContent = window.DRIVE_FOLDER_NAME || 'AyukiLab_一時アップロード';
+
+    let accessToken = null;
+    let folderId = null;
+    let tokenClient = null;
+
+    if (typeof window.GOOGLE_CLIENT_ID === 'undefined' || !window.GOOGLE_CLIENT_ID) {
+      setupWarning.style.display = 'block';
+      signedOutView.style.display = 'block';
+      signinBtn.disabled = true;
+    } else {
+      signedOutView.style.display = 'block';
+      initWhenReady();
+    }
+
+    function initWhenReady() {
+      if (typeof google === 'undefined' || !google.accounts) {
+        setTimeout(initWhenReady, 200);
+        return;
+      }
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: window.GOOGLE_CLIENT_ID,
+        scope: SCOPES,
+        callback: async (resp) => {
+          if (resp.error) {
+            authError.textContent = 'ログインに失敗しました: ' + resp.error;
+            return;
+          }
+          accessToken = resp.access_token;
+          await onSignedIn();
+        }
+      });
+      signinBtn.addEventListener('click', () => {
+        authError.textContent = '';
+        tokenClient.requestAccessToken({ prompt: 'consent' });
+      });
+    }
+
+    signoutBtn.addEventListener('click', () => {
+      if (accessToken && google.accounts && google.accounts.oauth2) {
+        google.accounts.oauth2.revoke(accessToken, () => {});
+      }
+      accessToken = null;
+      folderId = null;
+      signedInView.style.display = 'none';
+      signedOutView.style.display = 'block';
+    });
+
+    async function driveFetch(url, options = {}) {
+      options.headers = Object.assign({}, options.headers, {
+        Authorization: 'Bearer ' + accessToken
+      });
+      const res = await fetch(url, options);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`Drive API error (${res.status}): ${text}`);
+      }
+      return res;
+    }
+
+    async function onSignedIn() {
+      authError.textContent = '';
+      try {
+        // メールアドレス確認（管理者本人のみ許可）
+        const userInfoRes = await driveFetch('https://www.googleapis.com/oauth2/v3/userinfo');
+        const userInfo = await userInfoRes.json();
+        const adminEmail = (window.ADMIN_EMAIL || '').toLowerCase();
+        if (adminEmail && userInfo.email.toLowerCase() !== adminEmail) {
+          authError.textContent = 'このアカウント（' + userInfo.email + '）には権限がありません。';
+          if (google.accounts && google.accounts.oauth2) {
+            google.accounts.oauth2.revoke(accessToken, () => {});
+          }
+          accessToken = null;
+          return;
+        }
+
+        userEmail.textContent = userInfo.email;
+        signedOutView.style.display = 'none';
+        signedInView.style.display = 'block';
+
+        await ensureFolder();
+        await refreshFileList();
+      } catch (err) {
+        authError.textContent = '読み込みエラー: ' + err.message;
+      }
+    }
+
+    async function ensureFolder() {
+      const folderName = window.DRIVE_FOLDER_NAME || 'AyukiLab_一時アップロード';
+      const q = encodeURIComponent(
+        `name = '${folderName.replace(/'/g, "\\'")}' and mimeType = 'application/vnd.google-apps.folder' and 'root' in parents and trashed = false`
+      );
+      const res = await driveFetch(`https://www.googleapis.com/drive/v3/files?q=${q}&fields=files(id,name)`);
+      const data = await res.json();
+      if (data.files && data.files.length > 0) {
+        folderId = data.files[0].id;
+        return;
+      }
+      // フォルダが存在しない場合は新規作成
+      const createRes = await driveFetch('https://www.googleapis.com/drive/v3/files?fields=id', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: folderName, mimeType: 'application/vnd.google-apps.folder', parents: ['root'] })
+      });
+      const created = await createRes.json();
+      folderId = created.id;
+    }
+
+    // ---- アップロード ----
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+    function handleFiles(files) {
+      Array.from(files).forEach(uploadFile);
+    }
+
+    async function uploadFile(file) {
+      const row = document.createElement('div');
+      row.innerHTML = `
+        <div style="font-size:13px; color:#004d6e;">${file.name}</div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+      `;
+      progressList.appendChild(row);
+      const fill = row.querySelector('.progress-fill');
+
+      try {
+        // 1) resumable upload セッションを開始
+        const initRes = await driveFetch(
+          'https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: file.name, parents: [folderId] })
+          }
+        );
+        const uploadUrl = initRes.headers.get('Location');
+
+        // 2) XHRでPUTし、進捗を取得
+        await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('PUT', uploadUrl, true);
+          xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+              const pct = Math.round((e.loaded / e.total) * 100);
+              fill.style.width = pct + '%';
+            }
+          };
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve();
+            } else {
+              reject(new Error('アップロード失敗 (status ' + xhr.status + ')'));
+            }
+          };
+          xhr.onerror = () => reject(new Error('ネットワークエラー'));
+          xhr.send(file);
+        });
+
+        row.remove();
+        refreshFileList();
+      } catch (err) {
+        row.innerHTML = `<div style="color:#e05a3a; font-size:13px;">${file.name} のアップロードに失敗しました: ${err.message}</div>`;
+      }
+    }
+
+    // ---- 一覧表示 ----
+    async function refreshFileList() {
+      fileList.innerHTML = '<p class="notice">読み込み中…</p>';
+      try {
+        const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
+        const res = await driveFetch(
+          `https://www.googleapis.com/drive/v3/files?q=${q}&orderBy=createdTime desc&fields=files(id,name,size,webViewLink,modifiedTime)`
+        );
+        const data = await res.json();
+        const files = data.files || [];
+        if (files.length === 0) {
+          fileList.innerHTML = '<p class="notice">まだファイルがありません。</p>';
+          return;
+        }
+        fileList.innerHTML = '';
+        for (const f of files) {
+          const sizeMB = f.size ? (f.size / (1024 * 1024)).toFixed(1) : '?';
+          const div = document.createElement('div');
+          div.className = 'file-item';
+          div.innerHTML = `
+            <span class="file-name">${f.name}</span>
+            <span class="file-meta">${sizeMB}MB</span>
+            <span class="file-actions">
+              <a href="${f.webViewLink}" target="_blank" rel="noopener noreferrer">開く</a>
+              <button class="delete">削除</button>
+            </span>
+          `;
+          div.querySelector('.delete').addEventListener('click', async () => {
+            if (!confirm(`「${f.name}」を削除しますか？`)) return;
+            await driveFetch(`https://www.googleapis.com/drive/v3/files/${f.id}`, { method: 'DELETE' });
+            refreshFileList();
+          });
+          fileList.appendChild(div);
+        }
+      } catch (err) {
+        fileList.innerHTML = `<p class="notice">読み込みエラー: ${err.message}</p>`;
+      }
+    }
+  </script>
+
+</body>
+</html>
