@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ファイル提出フォーム - AyukiLab</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="../../style.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../image/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../../image/favicon-16.png">
+  <link rel="shortcut icon" href="../../image/favicon.png">
+  <link rel="apple-touch-icon" href="../../image/apple-touch-icon.png">
+
+  <style>
+    .upload-container {
+      max-width: 640px;
+      margin: 40px auto;
+      padding: 0 15px;
+    }
+    .upload-box {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(77, 208, 225, 0.35);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .upload-box h2 {
+      color: #004d6e;
+      font-size: 18px;
+      margin-top: 0;
+    }
+    .drop-zone {
+      border: 2px dashed #4dd0e1;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      color: #0097a7;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .drop-zone.dragover {
+      background: #e0f7fa;
+      border-color: #ff7043;
+      color: #ff7043;
+    }
+    .drop-zone input { display: none; }
+    .progress-track {
+      background: #e0f7fa;
+      border-radius: 6px;
+      height: 8px;
+      margin: 6px 0 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: #4dd0e1;
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s;
+    }
+    .progress-pct {
+      font-size: 12px;
+      color: #0097a7;
+    }
+    .file-row {
+      margin-bottom: 18px;
+    }
+    .file-row .file-name {
+      font-size: 13px;
+      color: #004d6e;
+      word-break: break-all;
+    }
+    .file-row.done .file-name::after {
+      content: " ✓ 完了";
+      color: #2e7d32;
+      font-weight: bold;
+    }
+    .file-row.error .file-name::after {
+      content: " ✗ 失敗";
+      color: #e05a3a;
+      font-weight: bold;
+    }
+    .notice {
+      font-size: 13px;
+      color: #0097a7;
+      background: #e0f7fa;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+    .setup-warning {
+      font-size: 13px;
+      color: #b23d00;
+      background: #fff3ea;
+      border: 1px solid #ffcc99;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo"><a href="../../index.html">Ayuki Lab</a></div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>ファイル提出フォーム</h1>
+      <p>動画・写真をアップロードしてください</p>
+    </section>
+
+    <div class="upload-container">
+
+      <div id="setup-warning" class="setup-warning">
+        送信先の設定が未完了です。<code>upload/QfPhUhFM8hZVEgrX2TggDpg1/config.js</code> にApps ScriptのURLを入力してください。
+      </div>
+
+      <div class="upload-box">
+        <h2>アップロード</h2>
+        <p class="notice">ログインは不要です。送信されたファイルは管理者のみが確認できます。大きな動画ファイルは分割して送信されるため、時間がかかる場合があります。アップロード完了まで、このページを閉じずにお待ちください。</p>
+        <div class="drop-zone" id="drop-zone">
+          <p>ここにファイルをドラッグ＆ドロップ<br>またはクリックして選択</p>
+          <input type="file" id="file-input" accept="video/*,image/*" multiple>
+        </div>
+        <div id="upload-list" style="margin-top:20px;"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 AyukiLab</p>
+  </footer>
+
+  <!-- 送信先設定 -->
+  <script src="./config.js"></script>
+
+  <script>
+    const CHUNK_SIZE = 4 * 1024 * 1024; // 4MiB（256KiBの倍数）
+
+    const setupWarning = document.getElementById('setup-warning');
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const uploadList = document.getElementById('upload-list');
+
+    if (typeof window.SUBMIT_ENDPOINT === 'undefined' || !window.SUBMIT_ENDPOINT) {
+      setupWarning.style.display = 'block';
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+    function handleFiles(files) {
+      Array.from(files).forEach(uploadFile);
+    }
+
+    function callGas(payload) {
+      return fetch(window.SUBMIT_ENDPOINT, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      }).then(r => r.json());
+    }
+
+    function blobToBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function uploadFile(file) {
+      const row = document.createElement('div');
+      row.className = 'file-row';
+      row.innerHTML = `
+        <div class="file-name">${file.name}</div>
+        <div class="progress-track"><div class="progress-fill"></div></div>
+        <div class="progress-pct">0%</div>
+      `;
+      uploadList.appendChild(row);
+      const fill = row.querySelector('.progress-fill');
+      const pctLabel = row.querySelector('.progress-pct');
+
+      try {
+        const initRes = await callGas({
+          action: 'init',
+          fileName: file.name,
+          mimeType: file.type || 'application/octet-stream',
+          fileSize: file.size
+        });
+        if (initRes.error) throw new Error(initRes.error);
+        const uploadId = initRes.uploadId;
+
+        let start = 0;
+        while (start < file.size) {
+          const end = Math.min(start + CHUNK_SIZE, file.size) - 1;
+          const chunkBlob = file.slice(start, end + 1);
+          const base64 = await blobToBase64(chunkBlob);
+          const chunkRes = await callGas({
+            action: 'chunk',
+            uploadId,
+            start,
+            end,
+            data: base64
+          });
+          if (chunkRes.error) throw new Error(chunkRes.error);
+
+          const pct = Math.round(((end + 1) / file.size) * 100);
+          fill.style.width = pct + '%';
+          pctLabel.textContent = pct + '%';
+
+          if (chunkRes.done) break;
+          start = end + 1;
+        }
+
+        row.classList.add('done');
+        pctLabel.textContent = '完了';
+      } catch (err) {
+        row.classList.add('error');
+        pctLabel.textContent = 'エラー: ' + err.message;
+      }
+    }
+  </script>
+
+</body>
+</html>
