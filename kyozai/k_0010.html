@@ -213,8 +213,8 @@ R・L・C の値や電源周波数をスライダーで自由に変えながら�
       </div>
       <div class="slider-row">
         <label for="rlc-rSpeed">再生速度</label>
-        <input type="range" id="rlc-rSpeed" min="0.01" max="1" step="0.01" value="0.4">
-        <span class="val" id="rlc-rSpeedval">0.40 倍</span>
+        <input type="range" id="rlc-rSpeed" min="0.01" max="1" step="0.01" value="0.01">
+        <span class="val" id="rlc-rSpeedval">0.01 倍</span>
       </div>
     </div>
 
@@ -294,7 +294,7 @@ overlay.addEventListener('click', toggleMenu);
   window.addEventListener('resize', fitCanvasDPI);
 
   const state = {
-    R: 20, L_mH: 60, C_uF: 80, I0: 2.0, f: 50, speed: 0.4,
+    R: 20, L_mH: 60, C_uF: 80, I0: 2.0, f: 50, speed: 0.01,
     running: true, t: 0
   };
 
