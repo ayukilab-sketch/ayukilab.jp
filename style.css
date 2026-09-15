@@ -1,19 +1,38 @@
 /* ------------------------------------
+   ハロウィン・パンプキンカラー パレット
+   （補色によるコントラスト事故を避けるため、
+   　彩度の高いパンプキンオレンジは枠線・下線など
+   　「面積の小さい装飾」にのみ使用し、文章の文字色には
+   　必ず濃い焦げ茶（--ink）系を使う設計にしています）
+------------------------------------ */
+:root {
+  --pumpkin: #e8590c;        /* メインのパンプキンオレンジ（枠線・アクセント） */
+  --pumpkin-light: #ffdcae;  /* 淡いパンプキン（バッジ・パネル背景） */
+  --pumpkin-pale: #fff1de;   /* さらに淡いパンプキン（ページ全体の背景） */
+  --ink: #2e1710;            /* 濃い焦げ茶（本文・見出しの文字色） */
+  --ink-soft: #7a3b12;       /* やわらかい茶色（補足テキスト） */
+  --accent-purple: #6a2c70;  /* ハロウィンパープル（ホバー時のアクセント） */
+  --night: #1f1018;          /* 漆黒に近いナイトカラー（フッター背景） */
+  --night-text: #fdf3e7;     /* フッターの文字色（暖かい白） */
+  --gold: #ffb347;           /* フッターリンク（パンプキンゴールド） */
+}
+
+/* ------------------------------------
    基本設定
 ------------------------------------ */
 body {
   font-family: "Yu Gothic", "Hiragino Sans", sans-serif;
   margin: 0;
   padding: 0;
-  background: #e0f7fa;
-  color: #1a3a4a;
+  background: var(--pumpkin-pale);
+  color: var(--ink);
 }
 
 /* ------------------------------------
    ヘッダー
 ------------------------------------ */
 header {
-  background: #f0fbff;
+  background: #fffaf3;
   padding: 15px 20px;
   display: flex;
   justify-content: space-between;
@@ -21,7 +40,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 3px solid #4dd0e1;
+  border-bottom: 3px solid var(--pumpkin);
 }
 
 .logo {
@@ -31,7 +50,7 @@ header {
 
 .logo a {
   text-decoration: none;
-  color: #004d6e;
+  color: var(--ink);
 }
 
 /* PCナビ */
@@ -45,14 +64,14 @@ header {
 
 .pc-nav a {
   text-decoration: none;
-  color: #004d6e;
+  color: var(--ink);
   font-size: 16px;
   transition: 0.3s;
 }
 
 .pc-nav a:hover {
-  color: #ff7043;
-  border-bottom: 2px solid #ff7043;
+  color: var(--accent-purple);
+  border-bottom: 2px solid var(--accent-purple);
 }
 
 /* ------------------------------------
@@ -70,7 +89,7 @@ header {
 .menu-toggle span {
   display: block;
   height: 3px;
-  background: #004d6e;
+  background: var(--ink);
   border-radius: 2px;
   transition: 0.3s;
 }
@@ -94,8 +113,8 @@ header {
   right: -100%;
   width: 70%;
   height: 100%;
-  background: #e0f7fa;
-  box-shadow: -2px 0 5px rgba(77, 208, 225, 0.4);
+  background: var(--pumpkin-pale);
+  box-shadow: -2px 0 5px rgba(232, 89, 12, 0.4);
   transition: right 0.3s;
   padding-top: 60px;
   z-index: 9;
@@ -117,7 +136,7 @@ header {
 
 #nav-menu a {
   text-decoration: none;
-  color: #004d6e;
+  color: var(--ink);
   font-size: 18px;
 }
 
@@ -143,7 +162,7 @@ header {
    Hero セクション
 ------------------------------------ */
 .hero {
-  background: linear-gradient(135deg, #e0f7fa, #b2ebf2);
+  background: linear-gradient(135deg, #fff1de, #ffcf94);
   text-align: center;
   padding: 50px 20px;
 }
@@ -151,7 +170,7 @@ header {
 .hero h1 {
   font-size: 40px;
   margin-bottom: 10px;
-  color: #004d6e;
+  color: var(--ink);
 }
 
 /* ------------------------------------
@@ -182,13 +201,13 @@ header {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(77, 208, 225, 0.35);
+  box-shadow: 0 4px 8px rgba(232, 89, 12, 0.3);
   transition: transform 0.3s;
 }
 
 .content-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(77, 208, 225, 0.55);
+  box-shadow: 0 6px 12px rgba(232, 89, 12, 0.5);
 }
 
 .content-card img {
@@ -200,13 +219,13 @@ header {
 .content-card h3 {
   margin: 16px;
   font-size: 18px;
-  color: #004d6e;
+  color: var(--ink);
 }
 
 .content-card p {
   margin: 0 16px 16px;
   font-size: 14px;
-  color: #0097a7;
+  color: var(--ink-soft);
 }
 
 .content-card a {
@@ -226,8 +245,8 @@ header {
 
 .category-heading {
   font-size: 22px;
-  color: #004d6e;
-  border-left: 5px solid #4dd0e1;
+  color: var(--ink);
+  border-left: 5px solid var(--pumpkin);
   padding-left: 12px;
   margin: 48px 0 0;
 }
@@ -237,7 +256,7 @@ header {
 }
 
 .category-empty {
-  color: #0097a7;
+  color: var(--ink-soft);
   font-size: 14px;
   padding: 20px 15px 40px;
 }
@@ -252,17 +271,17 @@ header {
 
 .more-link a {
   display: inline-block;
-  color: #004d6e;
+  color: var(--ink);
   font-weight: bold;
   text-decoration: none;
-  border-bottom: 2px solid #4dd0e1;
+  border-bottom: 2px solid var(--pumpkin);
   padding-bottom: 2px;
   transition: 0.3s;
 }
 
 .more-link a:hover {
-  color: #ff7043;
-  border-bottom-color: #ff7043;
+  color: var(--accent-purple);
+  border-bottom-color: var(--accent-purple);
 }
 
 /* ------------------------------------
@@ -279,15 +298,15 @@ header {
    フッター
 ------------------------------------ */
 footer {
-  background: #004d6e;
-  color: #fff;
+  background: var(--night);
+  color: var(--night-text);
   text-align: center;
   padding: 10px;
   margin-top: 40px;
 }
 
 footer a {
-  color: #ffd54f;
+  color: var(--gold);
 }
 
 footer a:hover {
@@ -299,26 +318,26 @@ footer a:hover {
 ------------------------------------ */
 .intro {
   background: #fff;
-  border-left: 4px solid #4dd0e1;
+  border-left: 4px solid var(--pumpkin);
   padding: 20px 24px;
   border-radius: 0 8px 8px 0;
   margin-bottom: 40px;
   font-size: 15px;
 }
 .section-label {
-  background: #e0f7fa;
-  border: 1px solid #4dd0e1;
+  background: var(--pumpkin-pale);
+  border: 1px solid var(--pumpkin);
   border-radius: 8px;
   padding: 12px 16px;
   font-size: 15px;
   font-weight: bold;
-  color: #004d6e;
+  color: var(--ink);
   margin: 40px 0 4px;
 }
 .badge {
   display: inline-block;
-  background: #4dd0e1;
-  color: #004d6e;
+  background: var(--pumpkin-light);
+  color: var(--ink);
   font-size: 12px;
   font-weight: bold;
   padding: 2px 10px;
@@ -327,14 +346,14 @@ footer a:hover {
 }
 .contact-box {
   background: #fff;
-  border: 1px solid #4dd0e1;
+  border: 1px solid var(--pumpkin);
   border-radius: 12px;
   padding: 24px;
   margin-top: 16px;
 }
-.contact-box a { color: #0097a7; text-decoration: none; }
-.contact-box a:hover { color: #004d6e; }
-.date-note { margin-top: 40px; font-size: 13px; color: #0097a7; opacity: 0.7; }
+.contact-box a { color: var(--accent-purple); text-decoration: none; }
+.contact-box a:hover { color: var(--ink); }
+.date-note { margin-top: 40px; font-size: 13px; color: var(--ink-soft); opacity: 0.7; }
 
 /* ------------------------------------
    レスポンシブ
